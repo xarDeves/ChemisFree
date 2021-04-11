@@ -217,6 +217,7 @@ public class Article extends JPanel {
     public void attachArticleButton(JButton articleButton) {
 
         this.articleButton = articleButton;
+        editButtonLabel();
     }
 
     public JTextPane getDataPanel() {
@@ -249,10 +250,13 @@ public class Article extends JPanel {
         @Override
         public void keyReleased(KeyEvent e) {
 
-            JLabel innerBtnLabel = (JLabel) articleButton.getAccessibleContext().getAccessibleChild(0);
-            innerBtnLabel.setText(getTitleTextPane());
-
+            editButtonLabel();
         }
+    }
+
+    private void editButtonLabel() {
+        JLabel innerBtnLabel = (JLabel) articleButton.getAccessibleContext().getAccessibleChild(0);
+        innerBtnLabel.setText(getTitleTextPane());
     }
 
 }

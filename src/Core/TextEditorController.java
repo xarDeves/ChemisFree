@@ -118,9 +118,9 @@ public class TextEditorController {
 
     public void addArticle(Article article) {
 
+        article.attachArticleButton(this.textEditor.createArticleButton(String.valueOf(this.articles.size())));
         this.textPanel.inflateArticle(article);
         this.articles.add(article);
-        this.textEditor.createArticleButton(String.valueOf(this.articles.size()));
 
     }
 
