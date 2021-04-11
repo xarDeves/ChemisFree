@@ -223,6 +223,17 @@ public class Article extends JPanel {
         return this.dataTextPane;
     }
 
+    private class DestroyListener implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+
+            Container parent = thisPanel.getParent();
+            parent.remove(thisPanel);
+
+        }
+    }
+
     private class titleChangeListener implements KeyListener {
 
         @Override
@@ -240,17 +251,6 @@ public class Article extends JPanel {
 
             JLabel innerBtnLabel = (JLabel) articleButton.getAccessibleContext().getAccessibleChild(0);
             innerBtnLabel.setText(getTitleTextPane());
-
-        }
-    }
-
-    private class DestroyListener implements ActionListener {
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-
-            Container parent = thisPanel.getParent();
-            parent.remove(thisPanel);
 
         }
     }

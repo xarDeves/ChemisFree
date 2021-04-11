@@ -1,7 +1,7 @@
 package Helpers;
 
 import Core.Views.TextEditor.Article;
-import Core.Views.TextEditor.TextEditor;
+import Core.Views.TextEditor.TextPanel;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -132,7 +132,7 @@ public final class XmlIoManager {
 
     //TODO load binary
     //way too tightly coupled, not of much importance tho, this will only get used by a TextPanel
-    public static void loadAndDisplay(String path, TextEditor.TextPanel textEditor) {
+    public static void loadAndDisplay(String path, LinkedList<Article> articles) {
 
         File xmlFile = new File(path);
 
@@ -160,7 +160,7 @@ public final class XmlIoManager {
                 Node node = elem.getElementsByTagName("data").item(0);
                 String text = node.getTextContent();
 
-                textEditor.addArticle(new Article(uid, text));
+                articles.add(new Article(uid, text));
             }
         }
 

@@ -1,6 +1,7 @@
 package Core.Views;
 
-import Core.Controller;
+import Core.MasterController;
+import Core.TextEditorController;
 import Core.Views.TextEditor.TextEditor;
 import Sniper.SniperMolecule;
 import org.openscience.cdk.exception.CDKException;
@@ -14,7 +15,7 @@ import java.awt.event.ActionListener;
 public class MainGui extends MyFrame {
 
     private final Dimension buttonMaxSize = new Dimension(60, 60);
-    private Controller controller;
+    private MasterController masterController;
 
     private final JPanel panel;
 
@@ -57,9 +58,9 @@ public class MainGui extends MyFrame {
         stylizeAndGLue(homeBtn, panel);
     }
 
-    public MainGui(Controller controller) {
+    public MainGui(MasterController masterController) {
 
-        this.controller = controller;
+        this.masterController = masterController;
 
         Image image = new ImageIcon("assets/MainGui/MainBar.png").getImage();
 
@@ -98,7 +99,7 @@ public class MainGui extends MyFrame {
         public void actionPerformed(ActionEvent e) {
 
             try {
-                new SniperMolecule(controller.getScreenSize());
+                new SniperMolecule(Toolkit.getDefaultToolkit().getScreenSize());
             } catch (AWTException awtException) {
                 awtException.printStackTrace();
             }
@@ -111,7 +112,7 @@ public class MainGui extends MyFrame {
         @Override
         public void actionPerformed(ActionEvent e) {
 
-            new TextEditor(controller);
+            new TextEditor();
 
         }
     }
