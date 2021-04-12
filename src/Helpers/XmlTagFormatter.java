@@ -42,8 +42,8 @@ public final class XmlTagFormatter {
         chemistrySentenceParser.parseTags();
         InputSource is = new InputSource(new StringReader(chemistrySentenceParser.makeXMLDocument().toXML()));
         //save xml doc
-        Document docForXmlOut = chemistrySentenceParser.makeXMLDocument();
-        Utils.writeXMLToFile(docForXmlOut, "ParserXmlOut/taggerOut.xml");
+        //Document docForXmlOut = chemistrySentenceParser.makeXMLDocument();
+        //Utils.writeXMLToFile(docForXmlOut, "ParserXmlOut/taggerOut.xml");
 
         org.w3c.dom.Document docForParse = null;
         try {

@@ -55,20 +55,20 @@ public class TextEditorController {
 
 
         //for normal text:
-            /*StringBuilder textData = new StringBuilder(" ");
+        /*StringBuilder textData = new StringBuilder(" ");
 
-            FileDialog dialog = new FileDialog(frame, "Open File");
-            dialog.setVisible(true);
-            String path = dialog.getDirectory() + dialog.getFile();
+        FileDialog dialog = new FileDialog(frame, "Open File");
+        dialog.setVisible(true);
+        String path = dialog.getDirectory() + dialog.getFile();
 
-            try (BufferedReader br = new BufferedReader(new FileReader(path))) {
-                String line;
-                while ((line = br.readLine()) != null) {
-                    textData.append(line);
-                }
-            } catch (IOException ex) {
-                JOptionPane.showMessageDialog(null, "Error!");
-            }*/
+        try (BufferedReader br = new BufferedReader(new FileReader(path))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                textData.append(line);
+            }
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(null, "Error!");
+        }*/
 
         //textArea.setText(textData.toString());
     }
@@ -91,15 +91,15 @@ public class TextEditorController {
         XmlIoManager.saveXml(path, this.articles);
 
         //for normal text
-            /*FileDialog dialog = new FileDialog(frame, "Save File");
-            dialog.setVisible(true);
-            String path = dialog.getDirectory() + dialog.getFile();
+        /*FileDialog dialog = new FileDialog(frame, "Save File");
+        dialog.setVisible(true);
+        String path = dialog.getDirectory() + dialog.getFile();
 
-            try (PrintWriter out = new PrintWriter(path)) {
-                out.println(textArea.getText());
-            } catch (FileNotFoundException ex) {
-                ex.printStackTrace();
-            }*/
+        try (PrintWriter out = new PrintWriter(path)) {
+            out.println(textArea.getText());
+        } catch (FileNotFoundException ex) {
+            ex.printStackTrace();
+        }*/
     }
 
     public void mine() {

@@ -17,7 +17,7 @@ public class TextPanel extends JPanel {
 
         JScrollPane scrollPane = new JScrollPane();
 
-        //TODO TextPane could get deprecated, directly use "this" JPanel
+        //FIXME get rid of "textPane", directly use "this" JPanel
         textPane = new JTextPane();
         textPane.setBackground(Color.DARK_GRAY);
         textPane.setEditable(false);

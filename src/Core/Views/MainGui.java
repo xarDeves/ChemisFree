@@ -15,48 +15,30 @@ import java.awt.event.ActionListener;
 public class MainGui extends MyFrame {
 
     private final Dimension buttonMaxSize = new Dimension(60, 60);
-    private MasterController masterController;
+    private final MasterController masterController;
 
     private final JPanel panel;
 
-    private JButton molBtn;
-    private JButton textBtn;
-    private JButton drawBtn;
-    private JButton sourceBtn;
-    private JButton folderBtn;
-    private JButton phoneBtn;
-    private JButton saveBtn;
-    private JButton homeBtn;
+    private final JButton molBtn;
+    private final JButton textBtn;
+    private final JButton drawBtn;
+    private final JButton sourceBtn;
+    //private JButton folderBtn;
+    private final JButton phoneBtn;
+    //private JButton saveBtn;
+    private final JButton homeBtn;
 
-    private void makeButtons() {
-        molBtn = new JButton(new ImageIcon("assets/MainGui/MolButton.png"));
-        textBtn = new JButton(new ImageIcon("assets/MainGui/TextSearchButton.png"));
-        drawBtn = new JButton(new ImageIcon("assets/MainGui/DrawButton.png"));
-        //TODO poooosssibly deprecate
-        sourceBtn = new JButton(new ImageIcon("assets/MainGui/SourceButton.png"));
-        folderBtn = new JButton(new ImageIcon("assets/MainGui/FolderButton.png"));
-        phoneBtn = new JButton(new ImageIcon("assets/Shared/PhoneButton.png"));
-        saveBtn = new JButton(new ImageIcon("assets/Shared/SaveButton.png"));
-        homeBtn = new JButton(new ImageIcon("assets/MainGui/HomeButton.png"));
+    /*private void makeButtons() {
+
     }
 
     private void attachListeners() {
-        molBtn.addActionListener(new MolListener());
-        textBtn.addActionListener(new TextListener());
-        drawBtn.addActionListener(new DrawListener());
-        sourceBtn.addActionListener(new SourceListener());
+
     }
 
     private void initStylize() {
-        stylizeAndGLue(molBtn, panel);
-        stylizeAndGLue(textBtn, panel);
-        stylizeAndGLue(drawBtn, panel);
-        stylizeAndGLue(sourceBtn, panel);
-        stylizeAndGLue(folderBtn, panel);
-        stylizeAndGLue(phoneBtn, panel);
-        stylizeAndGLue(saveBtn, panel);
-        stylizeAndGLue(homeBtn, panel);
-    }
+
+    }*/
 
     public MainGui(MasterController masterController) {
 
@@ -69,10 +51,26 @@ public class MainGui extends MyFrame {
         panel.setBorder(BorderFactory.createEmptyBorder(25, 16, 0, 0));
         this.setContentPane(panel);
 
-        makeButtons();
-        attachListeners();
-        initStylize();
+        molBtn = new JButton(new ImageIcon("assets/MainGui/MolButton.png"));
+        textBtn = new JButton(new ImageIcon("assets/MainGui/TextSearchButton.png"));
+        drawBtn = new JButton(new ImageIcon("assets/MainGui/DrawButton.png"));
+        sourceBtn = new JButton(new ImageIcon("assets/MainGui/SourceButton.png"));
+        phoneBtn = new JButton(new ImageIcon("assets/Shared/PhoneButton.png"));
+        homeBtn = new JButton(new ImageIcon("assets/MainGui/HomeButton.png"));
 
+        molBtn.addActionListener(new MolListener());
+        textBtn.addActionListener(new TextListener());
+        drawBtn.addActionListener(new DrawListener());
+        sourceBtn.addActionListener(new SourceListener());
+
+        stylizeAndGLue(molBtn, panel);
+        stylizeAndGLue(textBtn, panel);
+        stylizeAndGLue(drawBtn, panel);
+        stylizeAndGLue(sourceBtn, panel);
+        stylizeAndGLue(phoneBtn, panel);
+        stylizeAndGLue(homeBtn, panel);
+
+        this.setPreferredSize(new Dimension(100, 480));
         this.pack();
         this.setLocationRelativeTo(null);
         this.setVisible(true);
@@ -141,43 +139,4 @@ public class MainGui extends MyFrame {
         }
     }
 
-    /*public void addMolListener(ActionListener molListener) {
-        molBtn.addActionListener(molListener);
-
-    }
-
-    public void addTextListener(ActionListener textListener) {
-        textBtn.addActionListener(textListener);
-
-    }
-
-    public void addDrawListener(ActionListener drawcListener) {
-        drawBtn.addActionListener(drawcListener);
-
-    }
-
-    public void addSourceListener(ActionListener sourceListener) {
-        sourceBtn.addActionListener(sourceListener);
-
-    }
-
-    public void addFolderListener(ActionListener folderListener) {
-        folderBtn.addActionListener(folderListener);
-
-    }
-
-    public void addPhoneListener(ActionListener phoneListener) {
-        phoneBtn.addActionListener(phoneListener);
-
-    }
-
-    public void addSaveListener(ActionListener saveListener) {
-        saveBtn.addActionListener(saveListener);
-
-    }
-
-    public void addHomeListener(ActionListener homeListener) {
-        homeBtn.addActionListener(homeListener);
-
-    }*/
 }

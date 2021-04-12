@@ -64,7 +64,7 @@ public final class XmlIoManager {
                 new ErrorHandler() {
 
                     @Override
-                    public void warning(SAXParseException e) throws SAXException {
+                    public void warning(SAXParseException e) {
                         System.out.println("WARNING: " + e.getMessage());
                     }
 
@@ -109,7 +109,6 @@ public final class XmlIoManager {
             articleElement.appendChild(dataElement);
         }
 
-        //create the xml file
         //transform the DOM Object to an XML File
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
         Transformer transformer = null;
@@ -125,8 +124,6 @@ public final class XmlIoManager {
         } catch (TransformerException e) {
             e.printStackTrace();
         }
-
-        System.out.println("Done creating XML File");
 
     }
 

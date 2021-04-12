@@ -186,11 +186,8 @@ public class Article extends JPanel {
             //System.out.print("element : " + element);
             AttributeSet as = element.getAttributes();
 
-            if (element.getName().equals("component")) {
-                JButton btn = (JButton) StyleConstants.getComponent(as);
-                reconstructed.append(btn.getText()).append(" ");
+            if (element.getName().equals("content")) {
 
-            } else if (element.getName().equals("content")) {
                 try {
                     reconstructed.append(
                             dataTextPane.getText(element.getStartOffset(),
@@ -199,6 +196,11 @@ public class Article extends JPanel {
                 } catch (BadLocationException e) {
                     e.printStackTrace();
                 }
+            } else if (element.getName().equals("component")) {
+
+                JButton btn = (JButton) StyleConstants.getComponent(as);
+                reconstructed.append(btn.getText()).append(" ");
+
             }
         }
 
