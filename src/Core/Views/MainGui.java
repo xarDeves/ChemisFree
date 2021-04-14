@@ -12,8 +12,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class MainGui extends MyFrame {
-
-    private final Dimension buttonMaxSize = new Dimension(60, 60);
+    private final Dimension buttonMaxSize = new Dimension(62, 67);
     private final MasterController masterController;
 
     private final JPanel panel;
@@ -23,6 +22,7 @@ public class MainGui extends MyFrame {
     private final JButton drawBtn;
     private final JButton sourceBtn;
     //private JButton folderBtn;
+
     private final JButton phoneBtn;
     //private JButton saveBtn;
     private final JButton homeBtn;

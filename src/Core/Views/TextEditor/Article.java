@@ -72,7 +72,7 @@ public class Article extends JPanel {
         this.destroyBtn = new JButton(new ImageIcon("assets/shared/closeBtn.png"));
 
         this.titlePanel = new JPanel();
-        this.titlePanel.setLayout(new BoxLayout(this.titlePanel, BoxLayout.X_AXIS));
+        this.titlePanel.setLayout(new BorderLayout());
 
         this.titleTextPane = new JTextPane();
         this.dataTextPane = new JTextPane();
@@ -100,7 +100,7 @@ public class Article extends JPanel {
         stylizeInternals(this.destroyBtn);
 
         this.titlePanel.add(this.titleTextPane);
-        this.titlePanel.add(this.destroyBtn);
+        this.titlePanel.add(this.destroyBtn, BorderLayout.EAST);
 
         this.add(this.titlePanel);
         this.add(this.dataTextPane);
