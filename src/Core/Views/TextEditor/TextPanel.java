@@ -8,14 +8,14 @@ import java.util.LinkedList;
 
 public class TextPanel extends JPanel {
 
-    //private final JTextPane textPane;
-    //private final Document doc;
+    private final JTextPane textPane;
+    private final Document doc;
 
     public TextPanel() {
 
         //setLayout(new BorderLayout(0, 0));
 
-        /*JScrollPane scrollPane = new JScrollPane();
+        JScrollPane scrollPane = new JScrollPane();
 
         //FIXME get rid of "textPane", directly use "this" JPanel
         textPane = new JTextPane();
@@ -26,7 +26,7 @@ public class TextPanel extends JPanel {
 
         this.setLayout(new BorderLayout(0, 0));
 
-        this.add(scrollPane, BorderLayout.CENTER);*/
+        this.add(scrollPane, BorderLayout.CENTER);
 
     }
 
@@ -44,14 +44,14 @@ public class TextPanel extends JPanel {
 
     public void inflateArticle(Article article) {
 
-        /*textPane.insertComponent(article);
-
-        doc.insertString(doc.getLength(), "\n", null);
-        doc.insertString(doc.getLength(), "\n", null);
-        textPane.setCaretPosition(doc.getLength());*/
-        this.add(article);
-
-        //article.attachArticleButton(createArticleButton());
+        try {
+            textPane.insertComponent(article);
+            doc.insertString(doc.getLength(), "\n", null);
+            doc.insertString(doc.getLength(), "\n", null);
+            textPane.setCaretPosition(doc.getLength());
+        } catch (BadLocationException e) {
+            e.printStackTrace();
+        }
     }
 
 }

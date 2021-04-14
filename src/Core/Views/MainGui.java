@@ -46,6 +46,7 @@ public class MainGui extends MyFrame {
         Image image = new ImageIcon("assets/MainGui/MainBar.png").getImage();
 
         panel = new MotionPanel(this, image);
+        panel.setPreferredSize(new Dimension(500,800));
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setBorder(BorderFactory.createEmptyBorder(25, 16, 0, 0));
         this.setContentPane(panel);
@@ -69,7 +70,8 @@ public class MainGui extends MyFrame {
         stylizeAndGLue(phoneBtn, panel);
         stylizeAndGLue(homeBtn, panel);
 
-        this.setPreferredSize(new Dimension(100, 480));
+        this.setPreferredSize(new Dimension(500, 800));
+        //this.setBackground(Color.black);
         this.pack();
         this.setLocationRelativeTo(null);
         this.setVisible(true);

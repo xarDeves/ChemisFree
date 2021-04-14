@@ -9,10 +9,9 @@ public class MyFrame extends JFrame {
 
     public MyFrame() {
 
-        //this.setUndecorated(true);
+        this.setUndecorated(true);
         this.setLayout(null);
-        //this.setContentPane(panel);
-        //this.setBackground(new Color(0.0f, 0.0f, 0.0f, 0));
+        this.setBackground(new Color(0.0f, 0.0f, 0.0f, 0));
 
     }
 
