@@ -1,7 +1,6 @@
 package Helpers;
 
 import Core.Views.TextEditor.Article;
-import Core.Views.TextEditor.TextPanel;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;

@@ -1,23 +1,14 @@
 package Core.Views.TextEditor;
 
 import Core.TextEditorController;
-import Core.Views.MyFrame;
-import Helpers.XmlIoManager;
-import Sniper.SniperText;
-import org.xml.sax.SAXException;
 
 import javax.swing.*;
 import javax.swing.border.Border;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.Document;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.IOException;
-import java.util.LinkedList;
 
-public class TextEditor extends MyFrame {
+public class TextEditor extends JFrame {
 
     private final TextEditorController textController;
     private final JPanel panelArticleButtons;

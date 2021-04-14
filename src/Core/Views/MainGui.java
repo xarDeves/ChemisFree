@@ -1,7 +1,6 @@
 package Core.Views;
 
 import Core.MasterController;
-import Core.TextEditorController;
 import Core.Views.TextEditor.TextEditor;
 import Sniper.SniperMolecule;
 import org.openscience.cdk.exception.CDKException;
