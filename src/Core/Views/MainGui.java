@@ -11,6 +11,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+//TODO upon creation of objects with data critical for mobile communication, append them in "MasterController"
 public class MainGui extends MyFrame {
     private final Dimension buttonMaxSize = new Dimension(62, 67);
     private final MasterController masterController;
@@ -21,23 +22,9 @@ public class MainGui extends MyFrame {
     private final JButton textBtn;
     private final JButton drawBtn;
     private final JButton sourceBtn;
-    //private JButton folderBtn;
 
     private final JButton phoneBtn;
-    //private JButton saveBtn;
     private final JButton homeBtn;
-
-    /*private void makeButtons() {
-
-    }
-
-    private void attachListeners() {
-
-    }
-
-    private void initStylize() {
-
-    }*/
 
     public MainGui(MasterController masterController) {
 
@@ -46,7 +33,7 @@ public class MainGui extends MyFrame {
         Image image = new ImageIcon("assets/MainGui/MainBar.png").getImage();
 
         panel = new MotionPanel(this, image);
-        panel.setPreferredSize(new Dimension(500,800));
+        panel.setPreferredSize(new Dimension(500, 800));
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setBorder(BorderFactory.createEmptyBorder(25, 16, 0, 0));
         this.setContentPane(panel);
@@ -112,7 +99,6 @@ public class MainGui extends MyFrame {
         public void actionPerformed(ActionEvent e) {
 
             new TextEditor();
-
         }
     }
 

@@ -16,7 +16,6 @@ public class TextEditor extends JFrame {
     private static final Color bgColor = Color.decode("#1A1A1A");
     private static final Border articleBtnBorder = BorderFactory.createEmptyBorder(0, 23, 0, 22);
     private static final Dimension articleBtnDim = new Dimension(200, 50);
-    private static final ImageIcon articleImageBtn = new ImageIcon("assets/TextEditor/ArticleButton.png");
 
     public TextEditor() {
 
@@ -79,21 +78,14 @@ public class TextEditor extends JFrame {
 
     }
 
-    public JButton createArticleButton(String pos) {
+    public void insertArticleButton(JButton button) {
 
-        JButton articleBtn = new JButton(pos, articleImageBtn);
-        articleBtn.addActionListener(new articleNoBtnListener());
-        JLabel articleBtnLabel = new JLabel();
-        articleBtn.add(articleBtnLabel);
-        stylizeArticleBtn(articleBtn);
+        button.addActionListener(new articleNoBtnListener());
+        stylizeArticleBtn(button);
 
-        articleButtonPanel.add(articleBtn);
-
+        articleButtonPanel.add(button);
         articleButtonPanel.revalidate();
         articleButtonPanel.repaint();
-
-        return articleBtn;
-
     }
 
     private class ocrListener implements ActionListener {

@@ -18,6 +18,8 @@ import java.util.Map;
 
 public class TextEditorController {
 
+    private static final ImageIcon articleImageBtn = new ImageIcon("assets/TextEditor/ArticleButton.png");
+
     private final LinkedList<Article> articles = new LinkedList<>();
     private final LinkedList<JButton> articleButtons = new LinkedList<>();
     private final TextEditor textEditor;
@@ -44,6 +46,7 @@ public class TextEditorController {
     public void openXml() {
 
         FileDialog dialog = new FileDialog(this.textEditor, "Open File");
+        dialog.setFile("*.xml");
         dialog.setVisible(true);
         String path = dialog.getDirectory() + dialog.getFile();
 
@@ -82,6 +85,7 @@ public class TextEditorController {
     public void saveXml() {
 
         FileDialog dialog = new FileDialog(textEditor, "Save File");
+        dialog.setFile("*.xml");
         dialog.setVisible(true);
         String path = dialog.getDirectory() + dialog.getFile();
 
@@ -122,12 +126,23 @@ public class TextEditorController {
 
     }
 
+    private JButton createArticleButton() {
+
+        JButton button = new JButton(articleImageBtn);
+        JLabel buttonLabel = new JLabel();
+        button.add(buttonLabel);
+
+        return button;
+    }
+
     public void createArticle(String title, String details) {
 
         Article article = new Article(title, details, this);
-        JButton articleButton = this.textEditor.createArticleButton(String.valueOf(this.articles.size()));
+        JButton articleButton = createArticleButton();
 
-        article.attachArticleButton(articleButton);
+        this.textEditor.insertArticleButton(articleButton);
+
+        article.setArticleButton(articleButton);
         this.textPanel.inflateArticle(article);
 
         this.articles.add(article);
@@ -137,11 +152,10 @@ public class TextEditorController {
 
     public void articleButtonHandler(JButton source) {
 
-        if (source.equals(this.articleButtons.getLast())) {
+        if (source.equals(this.articleButtons.getLast()))
             this.createArticle("Untitled", "");
-        } else {
+        //else
             //TODO jump to article(?)
-        }
     }
 
     public void destroyArticleHandler(JButton articleButton, JPanel articlePanel) {

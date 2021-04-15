@@ -7,7 +7,6 @@ public final class MasterController {
     public MasterController(Model model) {
 
         this.model = model;
-
     }
 
 }

@@ -24,7 +24,6 @@ public class TextPanel extends JPanel {
         textPane.setEditable(false);
         doc = textPane.getStyledDocument();
         scrollPane.setViewportView(textPane);
-        //scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
         this.add(scrollPane);
 

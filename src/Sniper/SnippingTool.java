@@ -25,8 +25,8 @@ public abstract class SnippingTool extends JPanel {
 
     public SnippingTool(Dimension screenSize) throws AWTException {
 
-        this.sniperFrame = new JFrame("Select Recognition Bounds");
-        this.sniperFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.sniperFrame = new JFrame("Select Snipping Bounds");
+        this.sniperFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.sniperFrame.setSize(screenSize.width, screenSize.height);
         this.sniperFrame.setUndecorated(true);
         this.sniperFrame.setContentPane(this);
@@ -64,6 +64,7 @@ public abstract class SnippingTool extends JPanel {
 
             if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
                 sniperFrame.setVisible(false);
+                sniperFrame.dispose();
             }
 
             if (snipTaken) {

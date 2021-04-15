@@ -52,21 +52,6 @@ public class Article extends JPanel {
         StyleConstants.setFontSize(detailsAttrs, 17);
     }
 
-    private void stylizeTopLevel(JComponent component) {
-
-        component.setOpaque(true);
-        component.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
-        component.setBackground(Color.DARK_GRAY);
-        component.setForeground(Color.WHITE);
-    }
-
-    private void stylizeInternals(JComponent component) {
-
-        component.setOpaque(true);
-        component.setBorder(BorderFactory.createEmptyBorder());
-        component.setBackground(Color.DARK_GRAY);
-    }
-
     public Article(String title, String data, TextEditorController textEditorController) {
 
         this.thisPanel = this;
@@ -111,6 +96,20 @@ public class Article extends JPanel {
 
     }
 
+    private void stylizeTopLevel(JComponent component) {
+
+        component.setOpaque(true);
+        component.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
+        component.setBackground(Color.DARK_GRAY);
+        component.setForeground(Color.WHITE);
+    }
+    private void stylizeInternals(JComponent component) {
+
+        component.setOpaque(true);
+        component.setBorder(BorderFactory.createEmptyBorder());
+        component.setBackground(Color.DARK_GRAY);
+    }
+
     public void mineText() throws BadLocationException, IOException, SAXException {
 
         String rawData = this.getArticleText();
@@ -119,54 +118,40 @@ public class Article extends JPanel {
         NodeList tags = this.tagFormatter.getMolNodes();
         LinkedList<String> rawTags = this.tagFormatter.getRawTags();
 
-        //print molecule tags
-        /*for (int i = 0; i < tags.getLength() - 1; i++) {
-            System.out.println(tags.item(i).getTextContent());
-        }*/
-
-        //print all tags
-        /*for (int i = 0; i < rawTags.size() - 1; i++) {
-            System.out.println(rawTags.get(i));
-        }*/
-
         this.detailsTextPane.setText("");
 
-        if (tags != null) {
-
-            int tagCounter = 0;
-
-            for (String rawTag : rawTags) {
-                //System.out.println("STRING : " + rawTags.get(i) + " -- TAG : " + tags.item(tagCounter).getTextContent());
-
-                if (tags.item(tagCounter) != null && tags.item(tagCounter).getTextContent().equals(rawTag)) {
-                    //System.out.println("---------------------MATCHED---------------------");
-
-                    this.detailsTextPane.insertComponent(new MoleculeButton(tags.item(tagCounter).getTextContent()));
-                    this.detailsStyledDoc.insertString(this.detailsStyledDoc.getLength(), " ", detailsAttrs);
-
-                    //FIXME for fuck's sake...
-                    if (tagCounter < tags.getLength() - 1) {
-                        tagCounter++;
-                    }
-
-                } else {
-
-                    this.detailsStyledDoc.insertString(this.detailsStyledDoc.getLength(), rawTag + " ", detailsAttrs);
-                    this.detailsTextPane.setCaretPosition(this.detailsStyledDoc.getLength());
-                }
-            }
-        } else {
-
-            for (String rawTag : rawTags) {
-                this.detailsStyledDoc.insertString(this.detailsStyledDoc.getLength(), rawTag + " ", detailsAttrs);
-                this.detailsTextPane.setCaretPosition(this.detailsStyledDoc.getLength());
-
-            }
-        }
+        if (tags != null)
+            insertInteractiveText(tags, rawTags);
+        else
+            insertNormalText(rawTags);
 
     }
+    private void insertInteractiveText(NodeList tags, LinkedList<String> rawTags) throws BadLocationException {
+        int tagCounter = 0;
 
-    //GOTO saveXml
+        for (String rawTag : rawTags) {
+            if (tags.item(tagCounter) != null && tags.item(tagCounter).getTextContent().equals(rawTag)) {
+
+                this.detailsTextPane.insertComponent(new MoleculeButton(tags.item(tagCounter).getTextContent()));
+                this.detailsStyledDoc.insertString(this.detailsStyledDoc.getLength(), " ", detailsAttrs);
+                //FIXME for fuck's sake...
+                if (tagCounter < tags.getLength() - 1) {
+                    tagCounter++;
+                }
+            } else {
+                this.detailsStyledDoc.insertString(this.detailsStyledDoc.getLength(), rawTag + " ", detailsAttrs);
+                this.detailsTextPane.setCaretPosition(this.detailsStyledDoc.getLength());
+            }
+        }
+    }
+    private void insertNormalText(LinkedList<String> rawTags) throws BadLocationException {
+        for (String rawTag : rawTags) {
+            this.detailsStyledDoc.insertString(this.detailsStyledDoc.getLength(), rawTag + " ", detailsAttrs);
+            this.detailsTextPane.setCaretPosition(this.detailsStyledDoc.getLength());
+
+        }
+    }
+
     public String getTitleText() {
         String text = null;
 
@@ -178,10 +163,31 @@ public class Article extends JPanel {
 
         return text;
     }
-
     public String getArticleText() {
 
         StringBuilder reconstructed = new StringBuilder();
+        reconstructTextFromInteractive(reconstructed);
+        return reconstructed.toString();
+
+    }
+    public JTextPane getDetailsPane() {
+        return this.detailsTextPane;
+    }
+
+    public void setDetailsTextPane(String data) {
+        try {
+            this.detailsStyledDoc.insertString(this.detailsStyledDoc.getLength(), data, detailsAttrs);
+        } catch (BadLocationException e) {
+            e.printStackTrace();
+        }
+    }
+    public void setArticleButton(JButton articleButton) {
+
+        this.articleButton = articleButton;
+        editButtonLabel();
+    }
+
+    private void reconstructTextFromInteractive(StringBuilder reconstructed) {
 
         ElementIterator iterator = new ElementIterator(detailsStyledDoc);
         Element element;
@@ -204,30 +210,12 @@ public class Article extends JPanel {
 
                 JButton btn = (JButton) StyleConstants.getComponent(as);
                 reconstructed.append(btn.getText()).append(" ");
-
             }
         }
-
-        return reconstructed.toString();
-
     }
-
-    public void setDetailsTextPane(String data) {
-        try {
-            this.detailsStyledDoc.insertString(this.detailsStyledDoc.getLength(), data, detailsAttrs);
-        } catch (BadLocationException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void attachArticleButton(JButton articleButton) {
-
-        this.articleButton = articleButton;
-        editButtonLabel();
-    }
-
-    public JTextPane getDetailsPane() {
-        return this.detailsTextPane;
+    private void editButtonLabel() {
+        JLabel innerBtnLabel = (JLabel) articleButton.getAccessibleContext().getAccessibleChild(0);
+        innerBtnLabel.setText(getTitleText());
     }
 
     private class DestroyListener implements ActionListener {
@@ -237,24 +225,8 @@ public class Article extends JPanel {
 
             textEditorController.destroyArticleHandler(articleButton, thisPanel);
 
-            /*Container parent1 = thisPanel.getParent();
-            Container panelArticleButtons = articleButton.getParent();
-
-            parent1.remove(thisPanel);
-            panelArticleButtons.remove(articleButton);
-
-            parent1.revalidate();
-            panelArticleButtons.revalidate();
-
-            parent1.repaint();
-            panelArticleButtons.repaint();
-
-            //this will always be wrong since a JTextPane is used in TextPanel
-            System.out.println("parent1 child count: " + parent1.getComponents().length);
-            System.out.println("panelArticleButtons child count: " + panelArticleButtons.getComponents().length);*/
         }
     }
-
     private class titleChangeListener implements KeyListener {
 
         @Override
@@ -272,11 +244,6 @@ public class Article extends JPanel {
 
             editButtonLabel();
         }
-    }
-
-    private void editButtonLabel() {
-        JLabel innerBtnLabel = (JLabel) articleButton.getAccessibleContext().getAccessibleChild(0);
-        innerBtnLabel.setText(getTitleText());
     }
 
 }

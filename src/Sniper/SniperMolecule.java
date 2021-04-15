@@ -1,6 +1,5 @@
 package Sniper;
 
-
 import com.epam.indigo.Indigo;
 import com.epam.indigo.IndigoObject;
 import com.ggasoftware.imago.Imago;
@@ -31,10 +30,11 @@ public final class SniperMolecule extends SnippingTool {
                 exception.printStackTrace();
             }
 
+            //imago.exportPNG("C:\\Users\\chnte\\Desktop\\Programming\\ChemisFree\\src\\x.png");
             imago.recognize();
             String result = imago.getResult();
             IndigoObject mol = indigo.loadMolecule(result);
-            String smiles = mol.smiles();//.replace(".", "");
+            String smiles = mol.smiles();
 
             try {
                 //TODO change "setDefaultCloseOperation" of "JChemPaint"
@@ -49,7 +49,6 @@ public final class SniperMolecule extends SnippingTool {
         }).start();
 
         sniperFrame.setVisible(false);
-
     }
 
 }
