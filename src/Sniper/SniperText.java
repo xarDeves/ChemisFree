@@ -42,7 +42,7 @@ public final class SniperText extends SnippingTool {
                 if (result.isBlank()) {
                     JOptionPane.showMessageDialog(null, "ERROR! no characters found");
                 } else {
-                    article.setDataTextPane(result);
+                    article.setDetailsTextPane(result);
                 }
             } catch (TesseractException tesseractException) {
                 JOptionPane.showMessageDialog(null, "ERROR!");

@@ -8,8 +8,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 
-//TODO when sniper is initiated, minimize all windows
-//FIXME implement JFrame construction in "this" instead of "Controller"
 public abstract class SnippingTool extends JPanel {
 
     protected final short SCALE = 6;

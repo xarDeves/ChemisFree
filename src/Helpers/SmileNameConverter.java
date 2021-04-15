@@ -82,8 +82,7 @@ public final class SmileNameConverter {
     public static String parse(String data) {
 
         data = data.toUpperCase();
-        //TODO replace with trim ?
-        data = data.replaceAll(" ", "");
+        data = data.trim();
         data = data.replaceAll("\n", "");
 
         try {

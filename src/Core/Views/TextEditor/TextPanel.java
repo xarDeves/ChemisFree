@@ -13,20 +13,20 @@ public class TextPanel extends JPanel {
 
     public TextPanel() {
 
-        //setLayout(new BorderLayout(0, 0));
+        this.setLayout(new BorderLayout(0, 0));
 
         JScrollPane scrollPane = new JScrollPane();
 
         //FIXME get rid of "textPane", directly use "this" JPanel
+        // (complication in "TextEditorController -> destroyArticleHandler")
         textPane = new JTextPane();
         textPane.setBackground(Color.DARK_GRAY);
         textPane.setEditable(false);
         doc = textPane.getStyledDocument();
         scrollPane.setViewportView(textPane);
+        //scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
-        this.setLayout(new BorderLayout(0, 0));
-
-        this.add(scrollPane, BorderLayout.CENTER);
+        this.add(scrollPane);
 
     }
 
@@ -34,7 +34,7 @@ public class TextPanel extends JPanel {
 
         for (Article article : articles) {
 
-            if (article.getDataPanel().hasFocus()) {
+            if (article.getDetailsPane().hasFocus()) {
                 return article;
             }
         }

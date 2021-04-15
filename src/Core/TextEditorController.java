@@ -1,6 +1,5 @@
 package Core;
 
-
 import Core.Views.TextEditor.Article;
 import Core.Views.TextEditor.TextEditor;
 import Core.Views.TextEditor.TextPanel;
@@ -13,11 +12,14 @@ import javax.swing.text.BadLocationException;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 
 public class TextEditorController {
 
     private final LinkedList<Article> articles = new LinkedList<>();
+    private final LinkedList<JButton> articleButtons = new LinkedList<>();
     private final TextEditor textEditor;
     private final TextPanel textPanel;
 
@@ -25,13 +27,15 @@ public class TextEditorController {
 
         this.textPanel = textPanel;
         this.textEditor = textEditor;
-
     }
 
     public void ocr() {
         try {
             this.textEditor.setState(Frame.ICONIFIED);
-            new SniperText(Toolkit.getDefaultToolkit().getScreenSize(), textPanel.getLastFocusedArticle(this.articles));
+            new SniperText(
+                    Toolkit.getDefaultToolkit().getScreenSize(),
+                    textPanel.getLastFocusedArticle(this.articles)
+            );
         } catch (AWTException awtException) {
             awtException.printStackTrace();
         }
@@ -45,12 +49,14 @@ public class TextEditorController {
 
         if (new File(path).exists()) {
 
-            LinkedList<Article> articlesTemp = new LinkedList<>();
+            HashMap<String, String> articlesTemp = new HashMap<>();
             XmlIoManager.loadAndDisplay(path, articlesTemp);
 
-            for (Article article : articlesTemp) {
-                addArticle(article);
+            for (Map.Entry<String, String> entry : articlesTemp.entrySet()) {
+                this.createArticle(entry.getKey(), entry.getValue());
+
             }
+
         }
 
 
@@ -116,12 +122,45 @@ public class TextEditorController {
 
     }
 
-    public void addArticle(Article article) {
+    public void createArticle(String title, String details) {
 
-        article.attachArticleButton(this.textEditor.createArticleButton(String.valueOf(this.articles.size())));
+        Article article = new Article(title, details, this);
+        JButton articleButton = this.textEditor.createArticleButton(String.valueOf(this.articles.size()));
+
+        article.attachArticleButton(articleButton);
         this.textPanel.inflateArticle(article);
-        this.articles.add(article);
 
+        this.articles.add(article);
+        this.articleButtons.add(articleButton);
+
+    }
+
+    public void articleButtonHandler(JButton source) {
+
+        if (source.equals(this.articleButtons.getLast())) {
+            this.createArticle("Untitled", "");
+        } else {
+            //TODO jump to article(?)
+        }
+    }
+
+    public void destroyArticleHandler(JButton articleButton, JPanel articlePanel) {
+
+        if (articleButtons.size() > 1) {
+
+            this.articleButtons.remove(articleButton);
+
+            textEditor.getArticleButtonPanel().remove(articleButton);
+            //TODO since articles are inflated in a JTextPane and this function accesses the JPanel(TextPanel)
+            // articlePanel cannot be found, waiting for refactoring
+            textPanel.remove(articlePanel);
+
+            textEditor.revalidate();
+            textEditor.repaint();
+
+            textPanel.revalidate();
+            textPanel.repaint();
+        }
     }
 
 }

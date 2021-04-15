@@ -24,8 +24,11 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.LinkedList;
 
+
+//TODO save/load binary (?)
 public final class XmlIoManager {
 
     private static DocumentBuilder saveFileBuilder;
@@ -82,7 +85,6 @@ public final class XmlIoManager {
         );
     }
 
-    //TODO save binary
     public static void saveXml(String path, LinkedList<Article> articles) {
 
         org.w3c.dom.Document document = saveFileBuilder.newDocument();
@@ -93,8 +95,8 @@ public final class XmlIoManager {
 
         for (Article article : articles) {
 
-            String title = article.getTitleTextPane();
-            String data = article.getDataTextPane();
+            String title = article.getTitleText();
+            String data = article.getArticleText();
 
             Element articleElement = document.createElement("article");
             root.appendChild(articleElement);
@@ -126,9 +128,7 @@ public final class XmlIoManager {
 
     }
 
-    //TODO load binary
-    //way too tightly coupled, not of much importance tho, this will only get used by a TextPanel
-    public static void loadAndDisplay(String path, LinkedList<Article> articles) {
+    public static void loadAndDisplay(String path, HashMap<String, String> articles) {
 
         File xmlFile = new File(path);
 
@@ -156,7 +156,7 @@ public final class XmlIoManager {
                 Node node = elem.getElementsByTagName("data").item(0);
                 String text = node.getTextContent();
 
-                articles.add(new Article(uid, text));
+                articles.put(uid, text);
             }
         }
 

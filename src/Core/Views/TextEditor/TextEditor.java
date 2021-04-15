@@ -11,7 +11,7 @@ import java.awt.event.ActionListener;
 public class TextEditor extends JFrame {
 
     private final TextEditorController textController;
-    private final JPanel panelArticleButtons;
+    private final JPanel articleButtonPanel;
 
     private static final Color bgColor = Color.decode("#1A1A1A");
     private static final Border articleBtnBorder = BorderFactory.createEmptyBorder(0, 23, 0, 22);
@@ -23,27 +23,26 @@ public class TextEditor extends JFrame {
         this.setLocation(500, 200);
         this.setLayout(new BorderLayout());
 
-        panelArticleButtons = new JPanel();
+        articleButtonPanel = new JPanel();
         final JPanel panelToolButtons = new JPanel();
         final JPanel panelDown = new JPanel();
         final JPanel panelUpper = new JPanel();
         final TextPanel textPanel = new TextPanel();
 
         panelToolButtons.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
-        panelArticleButtons.setBorder(BorderFactory.createEmptyBorder(20, 9, 0, 32));
+        articleButtonPanel.setBorder(BorderFactory.createEmptyBorder(20, 9, 0, 32));
 
         panelUpper.setBackground(bgColor);
         panelToolButtons.setBackground(bgColor);
         panelDown.setBackground(bgColor);
-        panelArticleButtons.setBackground(bgColor);
-        //TODO get rid of this eventually (?)
+        articleButtonPanel.setBackground(bgColor);
 
         panelToolButtons.setLayout(new BoxLayout(panelToolButtons, BoxLayout.Y_AXIS));
         panelUpper.setLayout(new FlowLayout(FlowLayout.LEADING, 228, 20));
-        panelArticleButtons.setLayout(new BoxLayout(panelArticleButtons, BoxLayout.Y_AXIS));
+        articleButtonPanel.setLayout(new BoxLayout(articleButtonPanel, BoxLayout.Y_AXIS));
 
         panelUpper.setPreferredSize(new Dimension(0, 20));
-        panelArticleButtons.setPreferredSize(new Dimension(230, 300));
+        articleButtonPanel.setPreferredSize(new Dimension(230, 300));
         panelToolButtons.setPreferredSize(new Dimension(100, 400));
         panelDown.setPreferredSize(new Dimension(0, 20));
         textPanel.setPreferredSize(new Dimension(500, 300));
@@ -67,7 +66,7 @@ public class TextEditor extends JFrame {
         panelToolButtons.add(openFileBtn);
 
         this.add(panelUpper, BorderLayout.NORTH);
-        this.add(panelArticleButtons, BorderLayout.WEST);
+        this.add(articleButtonPanel, BorderLayout.WEST);
         this.add(panelToolButtons, BorderLayout.EAST);
         this.add(panelDown, BorderLayout.SOUTH);
         this.add(textPanel, BorderLayout.CENTER);
@@ -76,7 +75,7 @@ public class TextEditor extends JFrame {
         this.setVisible(true);
 
         this.textController = new TextEditorController(textPanel, this);
-        this.textController.addArticle(new Article("Untitled", ""));
+        this.textController.createArticle("Untitled", "");
 
     }
 
@@ -84,15 +83,14 @@ public class TextEditor extends JFrame {
 
         JButton articleBtn = new JButton(pos, articleImageBtn);
         articleBtn.addActionListener(new articleNoBtnListener());
-        JLabel articleBtnLabel = new JLabel(pos);
+        JLabel articleBtnLabel = new JLabel();
         articleBtn.add(articleBtnLabel);
         stylizeArticleBtn(articleBtn);
 
-        panelArticleButtons.add(Box.createRigidArea(new Dimension(0, 1)));
-        panelArticleButtons.add(articleBtn);
+        articleButtonPanel.add(articleBtn);
 
-        panelArticleButtons.revalidate();
-        panelArticleButtons.repaint();
+        articleButtonPanel.revalidate();
+        articleButtonPanel.repaint();
 
         return articleBtn;
 
@@ -104,7 +102,6 @@ public class TextEditor extends JFrame {
         public void actionPerformed(ActionEvent e) {
 
             textController.ocr();
-
         }
     }
 
@@ -114,7 +111,6 @@ public class TextEditor extends JFrame {
         public void actionPerformed(ActionEvent e) {
 
             textController.openXml();
-
         }
     }
 
@@ -124,36 +120,29 @@ public class TextEditor extends JFrame {
         public void actionPerformed(ActionEvent e) {
 
             textController.saveXml();
-
         }
     }
 
-    //TODO refactor to controller
     private class textMineListener implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
 
             textController.mine();
-
         }
     }
 
-    //TODO refactor to controller
     private class articleNoBtnListener implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
 
-            //gets the last component (article button) in the panel
-            Component component = panelArticleButtons.getComponent(panelArticleButtons.getComponents().length - 1);
-
-            if (component.equals(e.getSource())) {
-                textController.addArticle(new Article("Untitled", ""));
-            } else {
-                //TODO jump to article's line
-            }
+            textController.articleButtonHandler((JButton) e.getSource());
         }
+    }
+
+    public JPanel getArticleButtonPanel() {
+        return articleButtonPanel;
     }
 
     private void stylizeToolBtn(JButton button1) {

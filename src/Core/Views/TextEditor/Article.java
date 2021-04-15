@@ -1,5 +1,6 @@
 package Core.Views.TextEditor;
 
+import Core.TextEditorController;
 import Helpers.XmlTagFormatter;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
@@ -14,21 +15,23 @@ import java.awt.event.KeyListener;
 import java.io.IOException;
 import java.util.LinkedList;
 
-//TODO implement article deletion
+
 public class Article extends JPanel {
 
+    private final TextEditorController textEditorController;
+
     private static final SimpleAttributeSet titleAttrs;
-    private static final SimpleAttributeSet dataAttrs;
+    private static final SimpleAttributeSet detailsAttrs;
 
     private final StyledDocument titleStyledDoc;
-    private final StyledDocument dataStyledDoc;
+    private final StyledDocument detailsStyledDoc;
 
     //private final LinkedList<MoleculeButton> molButtons = new LinkedList<>();
     private final XmlTagFormatter tagFormatter = new XmlTagFormatter();
     private JButton articleButton;
 
     private final JTextPane titleTextPane;
-    private final JTextPane dataTextPane;
+    private final JTextPane detailsTextPane;
 
     private final JButton destroyBtn;
     private final JPanel titlePanel;
@@ -38,18 +41,18 @@ public class Article extends JPanel {
     static {
 
         titleAttrs = new SimpleAttributeSet();
-        dataAttrs = new SimpleAttributeSet();
+        detailsAttrs = new SimpleAttributeSet();
 
         StyleConstants.setFontFamily(titleAttrs, "tahoma");
         StyleConstants.setFontSize(titleAttrs, 22);
         StyleConstants.setForeground(titleAttrs, Color.decode("#ff9700"));
         StyleConstants.setBold(titleAttrs, true);
 
-        StyleConstants.setFontFamily(dataAttrs, "tahoma");
-        StyleConstants.setFontSize(dataAttrs, 17);
+        StyleConstants.setFontFamily(detailsAttrs, "tahoma");
+        StyleConstants.setFontSize(detailsAttrs, 17);
     }
 
-    private void stylizeTopLevelContainers(JComponent component) {
+    private void stylizeTopLevel(JComponent component) {
 
         component.setOpaque(true);
         component.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
@@ -64,9 +67,10 @@ public class Article extends JPanel {
         component.setBackground(Color.DARK_GRAY);
     }
 
-    public Article(String title, String data) {
+    public Article(String title, String data, TextEditorController textEditorController) {
 
         this.thisPanel = this;
+        this.textEditorController = textEditorController;
 
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.destroyBtn = new JButton(new ImageIcon("assets/shared/closeBtn.png"));
@@ -75,17 +79,17 @@ public class Article extends JPanel {
         this.titlePanel.setLayout(new BorderLayout());
 
         this.titleTextPane = new JTextPane();
-        this.dataTextPane = new JTextPane();
+        this.detailsTextPane = new JTextPane();
 
         this.titleStyledDoc = titleTextPane.getStyledDocument();
-        this.dataStyledDoc = dataTextPane.getStyledDocument();
+        this.detailsStyledDoc = detailsTextPane.getStyledDocument();
 
         this.titleTextPane.setCharacterAttributes(titleAttrs, true);
-        this.dataTextPane.setCharacterAttributes(dataAttrs, true);
+        this.detailsTextPane.setCharacterAttributes(detailsAttrs, true);
 
         try {
             this.titleStyledDoc.insertString(this.titleStyledDoc.getLength(), title, titleAttrs);
-            this.dataStyledDoc.insertString(this.dataStyledDoc.getLength(), data, dataAttrs);
+            this.detailsStyledDoc.insertString(this.detailsStyledDoc.getLength(), data, detailsAttrs);
         } catch (BadLocationException e) {
             e.printStackTrace();
         }
@@ -93,9 +97,9 @@ public class Article extends JPanel {
         this.titleTextPane.addKeyListener(new titleChangeListener());
         this.destroyBtn.addActionListener(new DestroyListener());
 
-        stylizeTopLevelContainers(this.dataTextPane);
-        stylizeTopLevelContainers(this.titlePanel);
-        stylizeTopLevelContainers(this);
+        stylizeTopLevel(this.detailsTextPane);
+        stylizeTopLevel(this.titlePanel);
+        stylizeTopLevel(this);
         stylizeInternals(this.titleTextPane);
         stylizeInternals(this.destroyBtn);
 
@@ -103,13 +107,13 @@ public class Article extends JPanel {
         this.titlePanel.add(this.destroyBtn, BorderLayout.EAST);
 
         this.add(this.titlePanel);
-        this.add(this.dataTextPane);
+        this.add(this.detailsTextPane);
 
     }
 
     public void mineText() throws BadLocationException, IOException, SAXException {
 
-        String rawData = this.getDataTextPane();
+        String rawData = this.getArticleText();
 
         this.tagFormatter.generateAndSplitTags(rawData);
         NodeList tags = this.tagFormatter.getMolNodes();
@@ -125,7 +129,7 @@ public class Article extends JPanel {
             System.out.println(rawTags.get(i));
         }*/
 
-        this.dataTextPane.setText("");
+        this.detailsTextPane.setText("");
 
         if (tags != null) {
 
@@ -137,8 +141,8 @@ public class Article extends JPanel {
                 if (tags.item(tagCounter) != null && tags.item(tagCounter).getTextContent().equals(rawTag)) {
                     //System.out.println("---------------------MATCHED---------------------");
 
-                    this.dataTextPane.insertComponent(new MoleculeButton(tags.item(tagCounter).getTextContent()));
-                    this.dataStyledDoc.insertString(this.dataStyledDoc.getLength(), " ", dataAttrs);
+                    this.detailsTextPane.insertComponent(new MoleculeButton(tags.item(tagCounter).getTextContent()));
+                    this.detailsStyledDoc.insertString(this.detailsStyledDoc.getLength(), " ", detailsAttrs);
 
                     //FIXME for fuck's sake...
                     if (tagCounter < tags.getLength() - 1) {
@@ -147,15 +151,15 @@ public class Article extends JPanel {
 
                 } else {
 
-                    this.dataStyledDoc.insertString(this.dataStyledDoc.getLength(), rawTag + " ", dataAttrs);
-                    this.dataTextPane.setCaretPosition(this.dataStyledDoc.getLength());
+                    this.detailsStyledDoc.insertString(this.detailsStyledDoc.getLength(), rawTag + " ", detailsAttrs);
+                    this.detailsTextPane.setCaretPosition(this.detailsStyledDoc.getLength());
                 }
             }
         } else {
 
             for (String rawTag : rawTags) {
-                this.dataStyledDoc.insertString(this.dataStyledDoc.getLength(), rawTag + " ", dataAttrs);
-                this.dataTextPane.setCaretPosition(this.dataStyledDoc.getLength());
+                this.detailsStyledDoc.insertString(this.detailsStyledDoc.getLength(), rawTag + " ", detailsAttrs);
+                this.detailsTextPane.setCaretPosition(this.detailsStyledDoc.getLength());
 
             }
         }
@@ -163,7 +167,7 @@ public class Article extends JPanel {
     }
 
     //GOTO saveXml
-    public String getTitleTextPane() {
+    public String getTitleText() {
         String text = null;
 
         try {
@@ -175,11 +179,11 @@ public class Article extends JPanel {
         return text;
     }
 
-    public String getDataTextPane() {
+    public String getArticleText() {
 
         StringBuilder reconstructed = new StringBuilder();
 
-        ElementIterator iterator = new ElementIterator(dataStyledDoc);
+        ElementIterator iterator = new ElementIterator(detailsStyledDoc);
         Element element;
 
         while ((element = iterator.next()) != null) {
@@ -190,7 +194,7 @@ public class Article extends JPanel {
 
                 try {
                     reconstructed.append(
-                            dataTextPane.getText(element.getStartOffset(),
+                            detailsTextPane.getText(element.getStartOffset(),
                                     element.getEndOffset() - element.getStartOffset())
                     );
                 } catch (BadLocationException e) {
@@ -208,9 +212,9 @@ public class Article extends JPanel {
 
     }
 
-    public void setDataTextPane(String data) {
+    public void setDetailsTextPane(String data) {
         try {
-            this.dataStyledDoc.insertString(this.dataStyledDoc.getLength(), data, dataAttrs);
+            this.detailsStyledDoc.insertString(this.detailsStyledDoc.getLength(), data, detailsAttrs);
         } catch (BadLocationException e) {
             e.printStackTrace();
         }
@@ -222,8 +226,8 @@ public class Article extends JPanel {
         editButtonLabel();
     }
 
-    public JTextPane getDataPanel() {
-        return this.dataTextPane;
+    public JTextPane getDetailsPane() {
+        return this.detailsTextPane;
     }
 
     private class DestroyListener implements ActionListener {
@@ -231,9 +235,23 @@ public class Article extends JPanel {
         @Override
         public void actionPerformed(ActionEvent e) {
 
-            Container parent = thisPanel.getParent();
-            parent.remove(thisPanel);
+            textEditorController.destroyArticleHandler(articleButton, thisPanel);
 
+            /*Container parent1 = thisPanel.getParent();
+            Container panelArticleButtons = articleButton.getParent();
+
+            parent1.remove(thisPanel);
+            panelArticleButtons.remove(articleButton);
+
+            parent1.revalidate();
+            panelArticleButtons.revalidate();
+
+            parent1.repaint();
+            panelArticleButtons.repaint();
+
+            //this will always be wrong since a JTextPane is used in TextPanel
+            System.out.println("parent1 child count: " + parent1.getComponents().length);
+            System.out.println("panelArticleButtons child count: " + panelArticleButtons.getComponents().length);*/
         }
     }
 
@@ -258,7 +276,7 @@ public class Article extends JPanel {
 
     private void editButtonLabel() {
         JLabel innerBtnLabel = (JLabel) articleButton.getAccessibleContext().getAccessibleChild(0);
-        innerBtnLabel.setText(getTitleTextPane());
+        innerBtnLabel.setText(getTitleText());
     }
 
 }
