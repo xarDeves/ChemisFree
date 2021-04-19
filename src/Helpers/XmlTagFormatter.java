@@ -1,6 +1,7 @@
 package Helpers;
 
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -20,8 +21,9 @@ public final class XmlTagFormatter {
 
     private DocumentBuilder parserBuilder;
 
-    private final LinkedList<String> splitString = new LinkedList<>();
-    private NodeList molNodes;
+    private final LinkedList<String> rawTags = new LinkedList<>();
+    private final LinkedList<String> molTags = new LinkedList<>();
+    private final StringBuilder molStringBuilder = new StringBuilder();
 
     public XmlTagFormatter() {
 
@@ -32,7 +34,7 @@ public final class XmlTagFormatter {
         }
     }
 
-    public void generateAndSplitTags(String data) {
+    public void filterTags(String data) {
 
         POSContainer posContainer = ChemistryPOSTagger.getDefaultInstance().runTaggers(data);
         ChemistrySentenceParser chemistrySentenceParser = new ChemistrySentenceParser(posContainer);
@@ -57,30 +59,52 @@ public final class XmlTagFormatter {
 
         try {
             XPathExpression fullTextExpr = xpath.compile("//Sentence//*");
-            XPathExpression expr = xpath.compile("//OSCARCM//*");
+            NodeList allTags = (NodeList) fullTextExpr.evaluate(x, XPathConstants.NODESET);
 
-            NodeList resultAll = (NodeList) fullTextExpr.evaluate(x, XPathConstants.NODESET);
-            molNodes = (NodeList) expr.evaluate(x, XPathConstants.NODESET);
-
-            splitString.clear();
-            for (int i = 0; i < resultAll.getLength(); i++) {
-
-                if (resultAll.item(i).getFirstChild().getNodeValue() != null) {
-                    splitString.add(resultAll.item(i).getTextContent());
-                }
-            }
-
+            extract(allTags);
         } catch (XPathExpressionException e) {
             e.printStackTrace();
         }
     }
 
-    public NodeList getMolNodes() {
-        return this.molNodes;
+    private void extract(NodeList allTags) {
+
+        this.molTags.clear();
+        this.rawTags.clear();
+        Node node;
+        int count = 0;
+
+        while (count < allTags.getLength()) {
+            node = allTags.item(count);
+
+            if (node.getNodeName().equals("OSCARCM") || node.getNodeName().equals("OSCAR-CM")) {
+                while (node.getNodeName().equals("OSCAR-CM")) {
+                    this.molStringBuilder.append(node.getTextContent()).append(" ");
+                    count++;
+                    node = allTags.item(count);
+                }
+
+                if (!this.molStringBuilder.isEmpty()) {
+                    this.molTags.add(this.molStringBuilder.toString());
+                    this.rawTags.add(this.molStringBuilder.toString());
+                }
+
+                this.molStringBuilder.delete(0, this.molStringBuilder.length());
+            }
+
+            if (node.getFirstChild().getNodeValue() != null)
+                this.rawTags.add(node.getTextContent());
+
+            count++;
+        }
+    }
+
+    public LinkedList<String> getMolTags() {
+        return this.molTags;
     }
 
     public LinkedList<String> getRawTags() {
-        return this.splitString;
+        return this.rawTags;
     }
 
 }

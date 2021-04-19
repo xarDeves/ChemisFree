@@ -37,7 +37,6 @@ public final class SniperMolecule extends SnippingTool {
             String smiles = mol.smiles();
 
             try {
-                //TODO change "setDefaultCloseOperation" of "JChemPaint"
                 System.out.println("smiles from chempaint : " + new JChemPaintCustom(smiles).getSmilesFromJChem());
             } catch (CDKException | ClassNotFoundException | CloneNotSupportedException | IOException cdkException) {
                 cdkException.printStackTrace();

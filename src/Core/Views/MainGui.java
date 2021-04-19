@@ -11,7 +11,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-//TODO upon creation of objects with data critical for mobile communication, append them in "MasterController"
+//TODO upon creation of objects with critical data for mobile communication, append them in "MasterController"
 public class MainGui extends MyFrame {
     private final Dimension buttonMaxSize = new Dimension(62, 67);
     private final MasterController masterController;
@@ -76,7 +76,6 @@ public class MainGui extends MyFrame {
         button.setBorderPainted(false);
 
         panel.add(button);
-
     }
 
     private class MolListener implements ActionListener {
@@ -89,7 +88,6 @@ public class MainGui extends MyFrame {
             } catch (AWTException awtException) {
                 awtException.printStackTrace();
             }
-
         }
     }
 
@@ -108,7 +106,6 @@ public class MainGui extends MyFrame {
         public void actionPerformed(ActionEvent e) {
 
             new MoleculeSearch();
-
         }
     }
 

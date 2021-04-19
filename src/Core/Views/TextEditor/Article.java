@@ -2,7 +2,6 @@ package Core.Views.TextEditor;
 
 import Core.TextEditorController;
 import Helpers.XmlTagFormatter;
-import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import javax.swing.*;
@@ -26,7 +25,6 @@ public class Article extends JPanel {
     private final StyledDocument titleStyledDoc;
     private final StyledDocument detailsStyledDoc;
 
-    //private final LinkedList<MoleculeButton> molButtons = new LinkedList<>();
     private final XmlTagFormatter tagFormatter = new XmlTagFormatter();
     private JButton articleButton;
 
@@ -114,30 +112,27 @@ public class Article extends JPanel {
 
         String rawData = this.getArticleText();
 
-        this.tagFormatter.generateAndSplitTags(rawData);
-        NodeList tags = this.tagFormatter.getMolNodes();
+        this.tagFormatter.filterTags(rawData);
+        LinkedList<String> molTags = this.tagFormatter.getMolTags();
         LinkedList<String> rawTags = this.tagFormatter.getRawTags();
 
         this.detailsTextPane.setText("");
 
-        if (tags != null)
-            insertInteractiveText(tags, rawTags);
+        if (molTags != null)
+            insertInteractiveText(molTags, rawTags);
         else
             insertNormalText(rawTags);
 
     }
-    private void insertInteractiveText(NodeList tags, LinkedList<String> rawTags) throws BadLocationException {
+    private void insertInteractiveText(LinkedList<String> molTags, LinkedList<String> rawTags) throws BadLocationException {
         int tagCounter = 0;
 
         for (String rawTag : rawTags) {
-            if (tags.item(tagCounter) != null && tags.item(tagCounter).getTextContent().equals(rawTag)) {
-
-                this.detailsTextPane.insertComponent(new MoleculeButton(tags.item(tagCounter).getTextContent()));
+            if (molTags.get(tagCounter).equals(rawTag) && tagCounter < molTags.size() - 1) {
+                this.detailsTextPane.insertComponent(new MoleculeButton(molTags.get(tagCounter)));
                 this.detailsStyledDoc.insertString(this.detailsStyledDoc.getLength(), " ", detailsAttrs);
-                //FIXME for fuck's sake...
-                if (tagCounter < tags.getLength() - 1) {
-                    tagCounter++;
-                }
+
+                tagCounter++;
             } else {
                 this.detailsStyledDoc.insertString(this.detailsStyledDoc.getLength(), rawTag + " ", detailsAttrs);
                 this.detailsTextPane.setCaretPosition(this.detailsStyledDoc.getLength());
@@ -165,10 +160,7 @@ public class Article extends JPanel {
     }
     public String getArticleText() {
 
-        StringBuilder reconstructed = new StringBuilder();
-        reconstructTextFromInteractive(reconstructed);
-        return reconstructed.toString();
-
+        return reconstructText();
     }
     public JTextPane getDetailsPane() {
         return this.detailsTextPane;
@@ -187,7 +179,10 @@ public class Article extends JPanel {
         editButtonLabel();
     }
 
-    private void reconstructTextFromInteractive(StringBuilder reconstructed) {
+    //fetches text from buttons (if any)
+    private String reconstructText() {
+
+        StringBuilder reconstructed = new StringBuilder();
 
         ElementIterator iterator = new ElementIterator(detailsStyledDoc);
         Element element;
@@ -212,6 +207,8 @@ public class Article extends JPanel {
                 reconstructed.append(btn.getText()).append(" ");
             }
         }
+
+        return reconstructed.toString();
     }
     private void editButtonLabel() {
         JLabel innerBtnLabel = (JLabel) articleButton.getAccessibleContext().getAccessibleChild(0);
@@ -245,5 +242,4 @@ public class Article extends JPanel {
             editButtonLabel();
         }
     }
-
 }

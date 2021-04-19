@@ -24,8 +24,7 @@ public class MoleculeButton extends JButton {
     private BufferedImage molImage;
     private JWindow imageWindow = null;
 
-    //TODO this doesn't belong here, will be of use in details window
-    //TODO add molecule name and/or smiles on the image
+    //TODO add molecular weight
     private void makeImageFromSmiles(String smiles, String molecule) throws CDKException {
 
         SmilesParser smipar = new SmilesParser(SilentChemObjectBuilder.getInstance());
