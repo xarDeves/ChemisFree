@@ -1,61 +1,24 @@
 package Core.Views.TextEditor;
 
-import Helpers.SmileNameConverter;
-import org.openscience.cdk.CDKConstants;
-import org.openscience.cdk.depict.DepictionGenerator;
-import org.openscience.cdk.exception.CDKException;
-import org.openscience.cdk.interfaces.IAtomContainer;
-import org.openscience.cdk.silent.SilentChemObjectBuilder;
-import org.openscience.cdk.smiles.SmilesParser;
+import Core.Molecule;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 
 
 public class MoleculeButton extends JButton {
 
-    private BufferedImage molImage;
     private JWindow imageWindow = null;
+    private Molecule molecule;
 
-    //TODO add molecular weight
-    private void makeImageFromSmiles(String smiles, String molecule) throws CDKException {
-
-        SmilesParser smipar = new SmilesParser(SilentChemObjectBuilder.getInstance());
-        IAtomContainer mol = smipar.parseSmiles(smiles);
-        mol.setProperty(CDKConstants.TITLE, molecule);
-
-        DepictionGenerator dptgen = new DepictionGenerator();
-        // size in px (raster) or mm (vector)
-        // annotations are red by default
-        dptgen.withSize(300, 350)
-                .withMolTitle()
-                .withTitleColor(Color.DARK_GRAY);
-
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-
-        try {
-            dptgen.depict(mol).writeTo("png", out);
-            byte[] data = out.toByteArray();
-            ByteArrayInputStream input = new ByteArrayInputStream(data);
-            molImage = ImageIO.read(input);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    private void makeImageWindow() {
+    private void makeImageWindow(BufferedImage molImage) {
 
         this.imageWindow = new JWindow();
         JPanel panel = new JPanel();
-        JLabel l = new JLabel(new ImageIcon(this.molImage));
+        JLabel l = new JLabel(new ImageIcon(molImage));
 
         panel.setBorder(BorderFactory.createLineBorder(Color.black));
 
@@ -63,7 +26,6 @@ public class MoleculeButton extends JButton {
         imageWindow.add(panel);
 
         imageWindow.pack();
-
     }
 
     public MoleculeButton(String molecule) {
@@ -73,8 +35,8 @@ public class MoleculeButton extends JButton {
         new Thread(() -> {
 
             try {
-                makeImageFromSmiles(SmileNameConverter.parse(molecule), molecule);
-                makeImageWindow();
+                this.molecule = new Molecule(molecule);
+                makeImageWindow(this.molecule.molImage);
             } catch (Exception e) {
                 e.printStackTrace();
             }

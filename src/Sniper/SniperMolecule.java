@@ -42,7 +42,6 @@ public final class SniperMolecule extends SnippingTool {
                 cdkException.printStackTrace();
             }
 
-            //makeImageFromSmiles(smiles);
             System.out.println("smiles from imago : " + smiles);
 
         }).start();

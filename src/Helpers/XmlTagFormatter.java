@@ -1,5 +1,6 @@
 package Helpers;
 
+import nu.xom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -8,6 +9,7 @@ import org.xml.sax.SAXException;
 import uk.ac.cam.ch.wwmm.chemicaltagger.ChemistryPOSTagger;
 import uk.ac.cam.ch.wwmm.chemicaltagger.ChemistrySentenceParser;
 import uk.ac.cam.ch.wwmm.chemicaltagger.POSContainer;
+import uk.ac.cam.ch.wwmm.chemicaltagger.Utils;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -34,6 +36,11 @@ public final class XmlTagFormatter {
         }
     }
 
+    private void saveXml(ChemistrySentenceParser chemistrySentenceParser) {
+        Document docForXmlOut = chemistrySentenceParser.makeXMLDocument();
+        Utils.writeXMLToFile(docForXmlOut, "ParserXmlOut/taggerOut.xml");
+    }
+
     public void filterTags(String data) {
 
         POSContainer posContainer = ChemistryPOSTagger.getDefaultInstance().runTaggers(data);
@@ -41,9 +48,8 @@ public final class XmlTagFormatter {
 
         chemistrySentenceParser.parseTags();
         InputSource is = new InputSource(new StringReader(chemistrySentenceParser.makeXMLDocument().toXML()));
-        //save xml doc
-        //Document docForXmlOut = chemistrySentenceParser.makeXMLDocument();
-        //Utils.writeXMLToFile(docForXmlOut, "ParserXmlOut/taggerOut.xml");
+
+        //saveXml(chemistrySentenceParser);
 
         org.w3c.dom.Document docForParse = null;
         try {
@@ -71,32 +77,42 @@ public final class XmlTagFormatter {
 
         this.molTags.clear();
         this.rawTags.clear();
+        int childLen, count;
         Node node;
-        int count = 0;
 
-        while (count < allTags.getLength()) {
+        for (count = 0; count < allTags.getLength(); count++) {
             node = allTags.item(count);
 
-            if (node.getNodeName().equals("OSCARCM") || node.getNodeName().equals("OSCAR-CM")) {
-                while (node.getNodeName().equals("OSCAR-CM")) {
-                    this.molStringBuilder.append(node.getTextContent()).append(" ");
-                    count++;
-                    node = allTags.item(count);
+            if (node.getNodeName().equals("OSCARCM")) {
+
+                //this mess is necessary since "OSCARCM" tags contain molecules as well as characters like "/"
+                childLen = node.getChildNodes().getLength();
+                for (int i = 0; i < childLen; i++) {
+                    node = allTags.item(++count);
+
+                    if (node.getNodeName().equals("OSCAR-CM"))
+                        this.molStringBuilder.append(node.getTextContent()).append(" ");
+                    else {
+                        this.molTags.add(this.molStringBuilder.toString());
+                        this.rawTags.add(this.molStringBuilder.toString());
+                        this.rawTags.add(node.getTextContent());
+                        this.molStringBuilder.delete(0, this.molStringBuilder.length());
+                    }
                 }
 
-                if (!this.molStringBuilder.isEmpty()) {
+                if (!molStringBuilder.isEmpty()) {
                     this.molTags.add(this.molStringBuilder.toString());
                     this.rawTags.add(this.molStringBuilder.toString());
+                    this.molStringBuilder.delete(0, this.molStringBuilder.length());
                 }
 
-                this.molStringBuilder.delete(0, this.molStringBuilder.length());
-            }
-
-            if (node.getFirstChild().getNodeValue() != null)
+            } else if (node.getFirstChild().getNodeValue() != null) {
                 this.rawTags.add(node.getTextContent());
-
-            count++;
+            }
         }
+
+        System.out.println(this.molTags);
+        System.out.println(this.rawTags);
     }
 
     public LinkedList<String> getMolTags() {
@@ -106,5 +122,4 @@ public final class XmlTagFormatter {
     public LinkedList<String> getRawTags() {
         return this.rawTags;
     }
-
 }

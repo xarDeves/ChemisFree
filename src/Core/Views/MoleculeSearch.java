@@ -10,7 +10,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.IOException;
 
 public class MoleculeSearch extends MyFrame {
 
@@ -64,9 +63,10 @@ public class MoleculeSearch extends MyFrame {
 
             new Thread(() -> {
 
+                //FIXME refactor using "Molecule" class
                 try {
-                    new JChemPaintCustom(SmileNameConverter.parse(textField.getText())).getSmilesFromJChem();
-                } catch (CDKException | ClassNotFoundException | CloneNotSupportedException | IOException cdkException) {
+                    new JChemPaintCustom(SmileNameConverter.parse(textField.getText()));
+                } catch (CDKException cdkException) {
                     cdkException.printStackTrace();
                 }
 

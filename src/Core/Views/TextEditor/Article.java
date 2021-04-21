@@ -101,6 +101,7 @@ public class Article extends JPanel {
         component.setBackground(Color.DARK_GRAY);
         component.setForeground(Color.WHITE);
     }
+
     private void stylizeInternals(JComponent component) {
 
         component.setOpaque(true);
@@ -118,27 +119,30 @@ public class Article extends JPanel {
 
         this.detailsTextPane.setText("");
 
-        if (molTags != null)
+        if (molTags.size() != 0)
             insertInteractiveText(molTags, rawTags);
         else
             insertNormalText(rawTags);
 
     }
+
     private void insertInteractiveText(LinkedList<String> molTags, LinkedList<String> rawTags) throws BadLocationException {
         int tagCounter = 0;
 
         for (String rawTag : rawTags) {
-            if (molTags.get(tagCounter).equals(rawTag) && tagCounter < molTags.size() - 1) {
-                this.detailsTextPane.insertComponent(new MoleculeButton(molTags.get(tagCounter)));
-                this.detailsStyledDoc.insertString(this.detailsStyledDoc.getLength(), " ", detailsAttrs);
 
-                tagCounter++;
+            if (molTags.get(tagCounter).equals(rawTag)) {
+                this.detailsTextPane.insertComponent(new MoleculeButton(molTags.get(tagCounter)));
+                if (tagCounter < molTags.size() - 1) {
+                    tagCounter++;
+                }
             } else {
                 this.detailsStyledDoc.insertString(this.detailsStyledDoc.getLength(), rawTag + " ", detailsAttrs);
                 this.detailsTextPane.setCaretPosition(this.detailsStyledDoc.getLength());
             }
         }
     }
+
     private void insertNormalText(LinkedList<String> rawTags) throws BadLocationException {
         for (String rawTag : rawTags) {
             this.detailsStyledDoc.insertString(this.detailsStyledDoc.getLength(), rawTag + " ", detailsAttrs);
@@ -158,10 +162,12 @@ public class Article extends JPanel {
 
         return text;
     }
+
     public String getArticleText() {
 
         return reconstructText();
     }
+
     public JTextPane getDetailsPane() {
         return this.detailsTextPane;
     }
@@ -173,6 +179,7 @@ public class Article extends JPanel {
             e.printStackTrace();
         }
     }
+
     public void setArticleButton(JButton articleButton) {
 
         this.articleButton = articleButton;
@@ -210,6 +217,7 @@ public class Article extends JPanel {
 
         return reconstructed.toString();
     }
+
     private void editButtonLabel() {
         JLabel innerBtnLabel = (JLabel) articleButton.getAccessibleContext().getAccessibleChild(0);
         innerBtnLabel.setText(getTitleText());
@@ -224,6 +232,7 @@ public class Article extends JPanel {
 
         }
     }
+
     private class titleChangeListener implements KeyListener {
 
         @Override
