@@ -1,31 +1,28 @@
 package Core.Views.TextEditor;
 
 import javax.swing.*;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.Document;
-import java.awt.*;
 import java.util.LinkedList;
 
 public class TextPanel extends JPanel {
 
-    private final JTextPane textPane;
-    private final Document doc;
+    /*private final JTextPane textPane;
+    private final Document doc;*/
 
     public TextPanel() {
 
-        this.setLayout(new BorderLayout(0, 0));
+        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        //this.setLayout(new BorderLayout(0,0));
 
-        JScrollPane scrollPane = new JScrollPane();
+        /*JScrollPane scrollPane = new JScrollPane();
 
-        //FIXME get rid of "textPane", directly use "this" JPanel
         // (complication in "TextEditorController -> destroyArticleHandler")
         textPane = new JTextPane();
         textPane.setBackground(Color.DARK_GRAY);
         textPane.setEditable(false);
         doc = textPane.getStyledDocument();
-        scrollPane.setViewportView(textPane);
+        scrollPane.setViewportView(textPane);*/
 
-        this.add(scrollPane);
+        //this.add(scrollPane);
 
     }
 
@@ -43,14 +40,16 @@ public class TextPanel extends JPanel {
 
     public void inflateArticle(Article article) {
 
-        try {
+        this.add(article);
+
+       /* try {
             textPane.insertComponent(article);
             doc.insertString(doc.getLength(), "\n", null);
             doc.insertString(doc.getLength(), "\n", null);
             textPane.setCaretPosition(doc.getLength());
         } catch (BadLocationException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
 }

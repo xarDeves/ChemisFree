@@ -1,7 +1,5 @@
 package Core.Views.TextEditor;
 
-import Core.TextEditorController;
-
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
@@ -27,6 +25,7 @@ public class TextEditor extends JFrame {
         final JPanel panelDown = new JPanel();
         final JPanel panelUpper = new JPanel();
         final TextPanel textPanel = new TextPanel();
+        final JScrollPane textPanelScroll = new JScrollPane(textPanel);
 
         panelToolButtons.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
         articleButtonPanel.setBorder(BorderFactory.createEmptyBorder(20, 9, 0, 32));
@@ -44,7 +43,7 @@ public class TextEditor extends JFrame {
         articleButtonPanel.setPreferredSize(new Dimension(230, 300));
         panelToolButtons.setPreferredSize(new Dimension(100, 400));
         panelDown.setPreferredSize(new Dimension(0, 20));
-        textPanel.setPreferredSize(new Dimension(500, 300));
+        textPanelScroll.setPreferredSize(new Dimension(500, 300));
 
         JButton textMineBtn = new JButton(new ImageIcon("assets/TextEditor/TextMine.png"));
         JButton ocrBtn = new JButton(new ImageIcon("assets/TextEditor/OCR.png"));
@@ -68,14 +67,13 @@ public class TextEditor extends JFrame {
         this.add(articleButtonPanel, BorderLayout.WEST);
         this.add(panelToolButtons, BorderLayout.EAST);
         this.add(panelDown, BorderLayout.SOUTH);
-        this.add(textPanel, BorderLayout.CENTER);
+        this.add(textPanelScroll, BorderLayout.CENTER);
 
         this.pack();
         this.setVisible(true);
 
         this.textController = new TextEditorController(textPanel, this);
         this.textController.createArticle("Untitled", "");
-
     }
 
     public void insertArticleButton(JButton button) {

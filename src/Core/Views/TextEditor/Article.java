@@ -1,6 +1,5 @@
 package Core.Views.TextEditor;
 
-import Core.TextEditorController;
 import Helpers.XmlTagFormatter;
 import org.xml.sax.SAXException;
 

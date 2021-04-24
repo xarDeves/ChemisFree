@@ -1,8 +1,5 @@
-package Core;
+package Core.Views.TextEditor;
 
-import Core.Views.TextEditor.Article;
-import Core.Views.TextEditor.TextEditor;
-import Core.Views.TextEditor.TextPanel;
 import Helpers.XmlIoManager;
 import Sniper.SniperText;
 import org.xml.sax.SAXException;
@@ -165,8 +162,6 @@ public class TextEditorController {
             this.articleButtons.remove(articleButton);
 
             textEditor.getArticleButtonPanel().remove(articleButton);
-            //TODO since articles are inflated in a JTextPane and this function accesses the JPanel(TextPanel)
-            // articlePanel cannot be found, waiting for refactoring
             textPanel.remove(articlePanel);
 
             textEditor.revalidate();
