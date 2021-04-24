@@ -111,8 +111,6 @@ public final class XmlTagFormatter {
             }
         }
 
-        System.out.println(this.molTags);
-        System.out.println(this.rawTags);
     }
 
     public LinkedList<String> getMolTags() {
