@@ -184,7 +184,7 @@ public final class Molecule {
         if (smiles != null) {
 
             try {
-                this.makeImageFromSmiles(this.smiles);
+                this.makeImageFromSmiles();
                 this.generateInfoFromSmiles();
                 //this.printInfo();
             } catch (CDKException e) {
@@ -195,9 +195,9 @@ public final class Molecule {
     }
 
     //TODO add molecular weight
-    private void makeImageFromSmiles(String smiles) throws CDKException {
+    private void makeImageFromSmiles() throws CDKException {
 
-        IAtomContainer mol = smilesParser.parseSmiles(smiles);
+        IAtomContainer mol = smilesParser.parseSmiles(this.smiles);
         mol.setProperty(CDKConstants.TITLE, this.weight);
 
         DepictionGenerator depictionGenerator = new DepictionGenerator();
@@ -212,7 +212,7 @@ public final class Molecule {
             depictionGenerator.depict(mol).writeTo("png", out);
             byte[] data = out.toByteArray();
             ByteArrayInputStream input = new ByteArrayInputStream(data);
-            molImage = ImageIO.read(input);
+            this.molImage = ImageIO.read(input);
         } catch (IOException e) {
             e.printStackTrace();
         }
