@@ -17,8 +17,10 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 
 //TODO if no info could be retrieved, implement not found mechanism
+//TODO inherit from "SmileNameConverter"
 public final class Molecule {
 
     private static final SmilesParser smilesParser = new SmilesParser(SilentChemObjectBuilder.getInstance());
@@ -55,7 +57,6 @@ public final class Molecule {
     public String hBondAcceptorCount;
     public String hBondDonorCount;
     public String rotatableBondsCount;
-    public String ruleOfFive;
     public String stdinchi;
     public String stdinchikey;
     public String inchi;
@@ -64,85 +65,69 @@ public final class Molecule {
     public Double logSp;
     public BufferedImage molImage;
 
-    private short foo1() {
+    public ArrayList<String> ruleOf5;
+    public ArrayList<String> ghoseVeber;
+    public ArrayList<String> leadLikeness;
 
-        //short[] LipinskiLimits = {500, 10, 5, 5, 10};
-        short violationsCount = 0;
+    private void determineRuleOfFive() {
+
+        this.ruleOf5 = new ArrayList<>();
 
         if (Double.parseDouble(weight) > 500) {
-            System.out.print("Weight > 500, ");
-            violationsCount++;
+            this.ruleOf5.add("Weight > 500");
         }
         if (Integer.parseInt(hBondAcceptorCount) > 10) {
-            System.out.print("Acceptors > 10, ");
-            violationsCount++;
+            this.ruleOf5.add("Acceptors > 10");
         }
         if (Integer.parseInt(hBondDonorCount) > 5) {
-            System.out.print("Donors > 5, ");
-            violationsCount++;
+            this.ruleOf5.add("Donors > 5");
         }
         if (Double.parseDouble(logP) > 5) {
-            System.out.print("LogP > 5, ");
-            violationsCount++;
+            this.ruleOf5.add("LogP > 5");
         }
-
-        return violationsCount;
     }
 
-    private short foo2() {
+    private void determineGhoseVeber() {
 
-        Double[] GhoseVeberLimits = {180.0, 480.0, 20.0, 70.0, 10.0, -0.4, 5.6, 140.0};
-        short violations2Count = 0;
+        this.ghoseVeber = new ArrayList<>();
 
-        if (Double.parseDouble(weight) < GhoseVeberLimits[0] || Double.parseDouble(weight) > GhoseVeberLimits[1]) {
+        if (Double.parseDouble(weight) < 180.0 || Double.parseDouble(weight) > 480.0) {
             System.out.print("Weight > 480 or < 180, ");
-            violations2Count++;
         }
-        if (Integer.parseInt(atomCount) < GhoseVeberLimits[2] || Integer.parseInt(atomCount) > GhoseVeberLimits[3]) {
+        if (Integer.parseInt(atomCount) < 20.0 || Integer.parseInt(atomCount) > 70.0) {
             System.out.print("Number of atoms > 70 or < 20, ");
-            violations2Count++;
         }
-        if (Integer.parseInt(rotatableBondsCount) > GhoseVeberLimits[4]) {
+        if (Integer.parseInt(rotatableBondsCount) > 10.0) {
             System.out.print("Number of Rotatable bonds > 10, ");
-            violations2Count++;
         }
-        if (Double.parseDouble(logP) < GhoseVeberLimits[5] || Double.parseDouble(logP) > GhoseVeberLimits[6]) {
+        if (Double.parseDouble(logP) < -0.4 || Double.parseDouble(logP) > 5.6) {
             System.out.print("LogP > 5.6 or < (-0.4), ");
-            violations2Count++;
         }
-        if (Double.parseDouble(tpsa) > GhoseVeberLimits[7]) {
+        if (Double.parseDouble(tpsa) > 140.0) {
             System.out.println("TPSA > 140");
-            violations2Count++;
         }
 
-        return violations2Count;
     }
 
-    private short foo3() {
+    private void determineleadLikeness() {
 
-        short violationsLead = 0;
+        this.leadLikeness = new ArrayList<>();
+
         if (Double.parseDouble(weight) > 300) {
-            System.out.println("MW > 300");
-            violationsLead++;
+            this.leadLikeness.add("MW > 300");
         }
         if (Integer.parseInt(rotatableBondsCount) > 3) {
-            System.out.println("Rotatable Bonds > 3");
-            violationsLead++;
+            this.leadLikeness.add("Rotatable Bonds > 3");
         }
         if (Integer.parseInt(hBondDonorCount) > 3) {
-            System.out.println("H-Bond Donors > 3");
-            violationsLead++;
+            this.leadLikeness.add("H-Bond Donors > 3");
         }
         if (Integer.parseInt(hBondAcceptorCount) > 3) {
-            System.out.println("H-Bond Acceptors > 3");
-            violationsLead++;
+            this.leadLikeness.add("H-Bond Acceptors > 3");
         }
         if (Double.parseDouble(logP) > 3) {
-            System.out.println("LogP > 3");
-            violationsLead++;
+            this.leadLikeness.add("LogP > 3");
         }
-
-        return violationsLead;
     }
 
     private void printInfo() {
@@ -163,9 +148,23 @@ public final class Molecule {
         System.out.println("No of Aromatic Atoms : " + aromaticAtomCount);
         //System.out.println("Rule of Five Violations : " + ruleOfFive);
 
-        System.out.println("Rule of Five Violations :  " + foo1());
-        System.out.println("Ghose-Veber Violations : " + foo2());
-        System.out.println("Leadlike violations : " + foo3());
+        determineRuleOfFive();
+        System.out.println("Rule of Five Violations : " + this.ruleOf5.size());
+        for (String s : this.ruleOf5) {
+            System.out.println(s);
+        }
+
+        /*determineGhoseVeber();
+        System.out.println("Ghose-Veber Violations : " + this.ghoseVeber.size());
+        for (String s : this.ruleOf5) {
+            System.out.println(s);
+        }*/
+
+        determineleadLikeness();
+        System.out.println("Leadlike violations : " + this.leadLikeness.size());
+        for (String s : this.leadLikeness) {
+            System.out.println(s);
+        }
 
         /*System.out.println("stdinchi : " + stdinchi);
         System.out.println("stdinchikey : " + stdinchikey);
@@ -177,15 +176,17 @@ public final class Molecule {
 
     public Molecule(String molecule) {
 
+        //FIXME this must work
+        //this.name = "N\\A";
         this.name = molecule;
         parse(molecule);
 
-        if (smiles != null) {
+        if (this.smiles != null) {
 
             try {
                 this.makeImageFromSmiles();
                 this.generateInfoFromSmiles();
-                //this.printInfo();
+                this.printInfo();
             } catch (CDKException e) {
                 e.printStackTrace();
             }
@@ -290,7 +291,7 @@ public final class Molecule {
         this.hBondAcceptorCount = hBondAcceptorDescriptor.calculate(atomContainer).getValue().toString();
         this.hBondDonorCount = hBondDonorDescriptor.calculate(atomContainer).getValue().toString();
         this.rotatableBondsCount = rotatableBondsCountDescriptor.calculate(atomContainer).getValue().toString();
-        this.ruleOfFive = ruleOfFiveDescriptor.calculate(atomContainer).getValue().toString();
+        //this.ruleOfFive = ruleOfFiveDescriptor.calculate(atomContainer).getValue().toString();
         this.aromaticAtomCount = aromaticAtomCountDescriptor.calculate(atomContainer).getValue().toString();
         this.logS = (-1.0377 * 12.19) - (0.0210 * Double.parseDouble(this.tpsa)) + 0.4488;
         this.logSp = (-0.7897 * 12.19) - 1.3674;

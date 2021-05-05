@@ -1,5 +1,7 @@
 package Core.Views;
 
+import Core.Molecule;
+import Core.Views.DetailsPanel.DetailsPanel;
 import Helpers.SmileNameConverter;
 import org.openscience.cdk.exception.CDKException;
 import org.openscience.jchempaint.JChemPaintCustom;
@@ -11,7 +13,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class MoleculeSearch extends MyFrame {
+//TODO clear TextArea correctly
+public class MoleculeSearch extends JFrame {
 
     private final JButton detailBtn, editBtn;
     private final JTextField textField;
@@ -63,7 +66,6 @@ public class MoleculeSearch extends MyFrame {
 
             new Thread(() -> {
 
-                //FIXME refactor using "Molecule" class
                 try {
                     new JChemPaintCustom(SmileNameConverter.parse(textField.getText()));
                 } catch (CDKException cdkException) {
@@ -79,6 +81,8 @@ public class MoleculeSearch extends MyFrame {
 
         @Override
         public void actionPerformed(ActionEvent e) {
+
+            new DetailsPanel(new Molecule(textField.getText()));
 
             //SmileNameConverter.parse(textField.getText());
 
