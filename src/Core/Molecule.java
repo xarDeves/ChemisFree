@@ -18,6 +18,7 @@ import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
 
+//TODO if no info could be retrieved, implement some kind of "NOT FOUND" mechanism
 public final class Molecule {
 
     private final static SmilesParser smilesParser = new SmilesParser(SilentChemObjectBuilder.getInstance());

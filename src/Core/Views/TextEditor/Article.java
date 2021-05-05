@@ -35,6 +35,46 @@ public class Article extends JPanel {
 
     private final JPanel thisPanel;
 
+    //FIXME for scroll testing purposes
+    public class WrapLabelView extends LabelView {
+
+        public WrapLabelView(Element elem) {
+            super(elem);
+        }
+
+        @Override
+        public float getMinimumSpan(int axis) {
+            return switch (axis) {
+                case View.X_AXIS -> 0;
+                case View.Y_AXIS -> super.getMinimumSpan(axis);
+                default -> throw new IllegalArgumentException("Invalid axis: " + axis);
+            };
+        }
+    }
+    public class WrapEditorKit extends StyledEditorKit {
+
+        protected ViewFactory _factory = new WrapColumnFactory();
+
+        @Override
+        public ViewFactory getViewFactory() {
+            return _factory;
+        }
+    }
+    public class WrapColumnFactory implements ViewFactory {
+
+        @Override
+        public View create(Element elem) {
+            return switch (elem.getName()) {
+                case AbstractDocument.ContentElementName -> new WrapLabelView(elem);
+                case AbstractDocument.ParagraphElementName -> new ParagraphView(elem);
+                case AbstractDocument.SectionElementName -> new BoxView(elem, View.Y_AXIS);
+                case StyleConstants.ComponentElementName -> new ComponentView(elem);
+                case StyleConstants.IconElementName -> new IconView(elem);
+                default -> new LabelView(elem);
+            };
+        }
+    }
+
     static {
 
         titleAttrs = new SimpleAttributeSet();
@@ -62,6 +102,10 @@ public class Article extends JPanel {
 
         this.titleTextPane = new JTextPane();
         this.detailsTextPane = new JTextPane();
+
+        //FIXME for scroll testing purposes
+        this.titleTextPane.setEditorKit(new WrapEditorKit());
+        this.detailsTextPane.setEditorKit(new WrapEditorKit());
 
         this.titleStyledDoc = titleTextPane.getStyledDocument();
         this.detailsStyledDoc = detailsTextPane.getStyledDocument();
@@ -100,7 +144,6 @@ public class Article extends JPanel {
         component.setBackground(Color.DARK_GRAY);
         component.setForeground(Color.WHITE);
     }
-
     private void stylizeInternals(JComponent component) {
 
         component.setOpaque(true);
@@ -124,7 +167,6 @@ public class Article extends JPanel {
             insertNormalText(rawTags);
 
     }
-
     private void insertInteractiveText(LinkedList<String> molTags, LinkedList<String> rawTags) throws BadLocationException {
         int tagCounter = 0;
 
@@ -141,7 +183,6 @@ public class Article extends JPanel {
             }
         }
     }
-
     private void insertNormalText(LinkedList<String> rawTags) throws BadLocationException {
         for (String rawTag : rawTags) {
             this.detailsStyledDoc.insertString(this.detailsStyledDoc.getLength(), rawTag + " ", detailsAttrs);
@@ -161,12 +202,10 @@ public class Article extends JPanel {
 
         return text;
     }
-
     public String getArticleText() {
 
         return reconstructText();
     }
-
     public JTextPane getDetailsPane() {
         return this.detailsTextPane;
     }
@@ -178,7 +217,6 @@ public class Article extends JPanel {
             e.printStackTrace();
         }
     }
-
     public void setArticleButton(JButton articleButton) {
 
         this.articleButton = articleButton;
@@ -231,7 +269,6 @@ public class Article extends JPanel {
 
         }
     }
-
     private class titleChangeListener implements KeyListener {
 
         @Override

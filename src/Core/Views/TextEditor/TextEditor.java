@@ -6,6 +6,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import static javax.swing.ScrollPaneConstants.*;
+
+
 public class TextEditor extends JFrame {
 
     private final TextEditorController textController;
@@ -26,6 +29,8 @@ public class TextEditor extends JFrame {
         final JPanel panelUpper = new JPanel();
         final TextPanel textPanel = new TextPanel();
         final JScrollPane textPanelScroll = new JScrollPane(textPanel);
+        //textPanelScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        //textPanelScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
         panelToolButtons.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
         articleButtonPanel.setBorder(BorderFactory.createEmptyBorder(20, 9, 0, 32));

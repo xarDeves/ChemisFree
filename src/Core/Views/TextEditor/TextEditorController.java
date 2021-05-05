@@ -94,8 +94,8 @@ public class TextEditorController {
             if (response != JOptionPane.YES_OPTION) {
                 return;
             }
+            XmlIoManager.saveXml(path, this.articles);
         }
-        XmlIoManager.saveXml(path, this.articles);
 
         //for normal text
         /*FileDialog dialog = new FileDialog(frame, "Save File");
@@ -140,7 +140,13 @@ public class TextEditorController {
         this.textEditor.insertArticleButton(articleButton);
 
         article.setArticleButton(articleButton);
-        this.textPanel.inflateArticle(article);
+        this.textPanel.add(article);
+
+        //FIXME these might not be of need
+        this.textPanel.revalidate();
+        this.textEditor.revalidate();
+        this.textPanel.repaint();
+        this.textEditor.repaint();
 
         this.articles.add(article);
         this.articleButtons.add(articleButton);
@@ -152,7 +158,7 @@ public class TextEditorController {
         if (source.equals(this.articleButtons.getLast()))
             this.createArticle("Untitled", "");
         //else
-            //TODO jump to article(?)
+        //TODO jump to article(?)
     }
 
     public void destroyArticleHandler(JButton articleButton, JPanel articlePanel) {
