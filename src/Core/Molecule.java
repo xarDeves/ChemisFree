@@ -21,8 +21,8 @@ import java.net.URLConnection;
 //TODO if no info could be retrieved, implement not found mechanism
 public final class Molecule {
 
-    private final static SmilesParser smilesParser = new SmilesParser(SilentChemObjectBuilder.getInstance());
-    private final static NameToStructure nts = NameToStructure.getInstance();
+    private static final SmilesParser smilesParser = new SmilesParser(SilentChemObjectBuilder.getInstance());
+    private static final NameToStructure nts = NameToStructure.getInstance();
     private static final WeightDescriptor weightDescriptor = new WeightDescriptor();
     private static final XLogPDescriptor xlogPDescritpor = new XLogPDescriptor();
     private static final AtomCountDescriptor atomCountDescriptor = new AtomCountDescriptor();
