@@ -64,7 +64,6 @@ public final class Molecule {
     public Double logSp;
     public BufferedImage molImage;
 
-
     private short foo1() {
 
         //short[] LipinskiLimits = {500, 10, 5, 5, 10};
@@ -281,7 +280,8 @@ public final class Molecule {
         this.inchi = nti.parseToInchi(this.smiles);
 
         IAtomContainer atomContainer = smilesParser.parseSmiles(this.smiles);
-        this.weight = weightDescriptor.calculate(atomContainer).getValue().toString();
+        //TODO truncate string directly
+        this.weight = String.format("%.3f", Float.valueOf(weightDescriptor.calculate(atomContainer).getValue().toString()));
         this.xlogP = xlogPDescritpor.calculate(atomContainer).getValue().toString();
         this.logP = logPDescriptor.calculate(atomContainer).getValue().toString();
         this.aLogP = aLogPDescriptor.calculate(atomContainer).getValue();

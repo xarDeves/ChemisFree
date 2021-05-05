@@ -1,6 +1,7 @@
 package Core.Views.TextEditor;
 
 import Core.Molecule;
+import Core.Views.DetailsPanel.DetailsPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,7 +13,7 @@ import java.awt.image.BufferedImage;
 public class MoleculeButton extends JButton {
 
     private JWindow imageWindow = null;
-    private Molecule molecule;
+    private Molecule moleculeObject;
 
     private void makeImageWindow(BufferedImage molImage) {
 
@@ -35,8 +36,8 @@ public class MoleculeButton extends JButton {
         new Thread(() -> {
 
             try {
-                this.molecule = new Molecule(molecule);
-                makeImageWindow(this.molecule.molImage);
+                this.moleculeObject = new Molecule(molecule);
+                makeImageWindow(this.moleculeObject.molImage);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -64,7 +65,7 @@ public class MoleculeButton extends JButton {
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                System.out.println("PRESSED");
+                new DetailsPanel(moleculeObject);
                 //((JButton) e.getSource()).setText("I'm a super button!! Or label...");
             }
         });
