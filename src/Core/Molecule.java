@@ -184,7 +184,7 @@ public final class Molecule {
         if (smiles != null) {
 
             try {
-                this.makeImageFromSmiles(this.smiles, this.name);
+                this.makeImageFromSmiles(this.smiles);
                 this.generateInfoFromSmiles();
                 //this.printInfo();
             } catch (CDKException e) {
@@ -195,7 +195,7 @@ public final class Molecule {
     }
 
     //TODO add molecular weight
-    private void makeImageFromSmiles(String smiles, String molecule) throws CDKException {
+    private void makeImageFromSmiles(String smiles) throws CDKException {
 
         IAtomContainer mol = smilesParser.parseSmiles(smiles);
         mol.setProperty(CDKConstants.TITLE, this.weight);
