@@ -2,24 +2,21 @@ package Core.Views;
 
 import Core.Molecule;
 import Core.Views.DetailsPanel.DetailsPanel;
-import Helpers.SmileNameConverter;
 import org.openscience.cdk.exception.CDKException;
 import org.openscience.jchempaint.JChemPaintCustom;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
+import java.util.Locale;
 
-//TODO clear TextArea correctly
 public class MoleculeSearch extends JFrame {
 
-    private final JButton detailBtn, editBtn;
     private final JTextField textField;
 
     private boolean textFieldCleared = false;
+
+    private Molecule molecule = null;
 
     public MoleculeSearch() {
 
@@ -28,6 +25,7 @@ public class MoleculeSearch extends JFrame {
 
         textField = new JTextField();
         textField.addMouseListener(new TextFieldListener());
+        textField.addKeyListener(new KeyPressListener());
         textField.setPreferredSize(new Dimension(250, 40));
         textField.setFont(new Font("Consolas", Font.ITALIC, 15));
         textField.setForeground(Color.BLACK);
@@ -35,8 +33,8 @@ public class MoleculeSearch extends JFrame {
         textField.setSelectionColor(Color.GRAY);
         textField.setText("Enter Name or SMILES");
 
-        editBtn = new JButton("Edit Structure");
-        detailBtn = new JButton("Details");
+        JButton editBtn = new JButton("Edit Structure");
+        JButton detailBtn = new JButton("Details");
 
         editBtn.addActionListener(new EditListener());
         detailBtn.addActionListener(new detailListener());
@@ -48,14 +46,18 @@ public class MoleculeSearch extends JFrame {
         this.setVisible(true);
     }
 
-    private class TextFieldListener extends MouseAdapter {
+    //prevents creating new molecule if previous is the same
+    private void makeMolecule() {
 
-        @Override
-        public void mouseClicked(MouseEvent e) {
-            if (!textFieldCleared) {
-                textField.setText("");
-                textFieldCleared = true;
+        String textFieldData = textField.getText().toUpperCase(Locale.ROOT);
+
+        if (this.molecule != null) {
+            if (!(this.molecule.name.equals(textFieldData) || this.molecule.smiles.equals(textFieldData))) {
+                molecule = new Molecule(textFieldData);
+                System.out.println("made new");
             }
+        } else {
+            molecule = new Molecule(textFieldData);
         }
     }
 
@@ -67,7 +69,8 @@ public class MoleculeSearch extends JFrame {
             new Thread(() -> {
 
                 try {
-                    new JChemPaintCustom(SmileNameConverter.parse(textField.getText()));
+                    makeMolecule();
+                    new JChemPaintCustom(molecule.smiles).show(molecule.name);
                 } catch (CDKException cdkException) {
                     cdkException.printStackTrace();
                 }
@@ -82,10 +85,40 @@ public class MoleculeSearch extends JFrame {
         @Override
         public void actionPerformed(ActionEvent e) {
 
-            new DetailsPanel(new Molecule(textField.getText()));
+            makeMolecule();
+            new DetailsPanel(molecule);
 
-            //SmileNameConverter.parse(textField.getText());
+        }
+    }
 
+    private class KeyPressListener implements KeyListener {
+        @Override
+        public void keyTyped(KeyEvent e) {
+
+        }
+
+        @Override
+        public void keyPressed(KeyEvent e) {
+            if (!textFieldCleared) {
+                textField.setText("");
+                textFieldCleared = true;
+            }
+        }
+
+        @Override
+        public void keyReleased(KeyEvent e) {
+
+        }
+    }
+
+    private class TextFieldListener extends MouseAdapter {
+
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            if (!textFieldCleared) {
+                textField.setText("");
+                textFieldCleared = true;
+            }
         }
     }
 }

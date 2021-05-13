@@ -1,7 +1,7 @@
 package Sniper;
 
+import Core.Views.ChemPaintTabView;
 import com.epam.indigo.Indigo;
-import com.epam.indigo.IndigoObject;
 import com.ggasoftware.imago.Imago;
 import gov.nih.ncats.molvec.Molvec;
 import org.openscience.cdk.exception.CDKException;
@@ -10,46 +10,43 @@ import org.openscience.jchempaint.JChemPaintCustom;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
+import java.util.HashMap;
 
 public final class SniperMolecule extends SnippingTool {
 
-    private static final Indigo indigo = new Indigo();
-    private static final Imago imago = new Imago();
+    private final HashMap<String, JChemPaintCustom> instances = new HashMap<>(2);
+
+    private final Indigo indigo = new Indigo();
+    private final Imago imago = new Imago();
 
     public SniperMolecule(Dimension screenSize) throws AWTException {
         super(screenSize);
     }
 
-    private String getImagoSmiles() {
+    private void recImago() throws Exception {
 
-        try {
-            imago.loadBufImage(this.snip);
-        } catch (Exception exception) {
-            exception.printStackTrace();
-        }
-
+        imago.loadBufImage(this.snip);
         imago.recognize();
+
         String result = imago.getResult();
-        //TODO deprecate "smiles" string, return value directly
         String smiles = indigo.loadMolecule(result).smiles();
         System.out.println("Smiles from imago : " + smiles);
 
-        return smiles;
+        if (!smiles.isBlank()) {
+            this.instances.put("Imago", new JChemPaintCustom(smiles));
+        }
     }
 
-    private String getMolvecSmiles() {
+    private void recMolvec() throws CDKException, IOException {
 
-        String result = null;
-        try {
-            result = Molvec.ocr(this.snip);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        //TODO deprecate "smiles" string, return value directly
+        String result = Molvec.ocr(this.snip);
         String smiles = indigo.loadMolecule(result).smiles();
         System.out.println("Smiles from molvec : " + smiles);
 
-        return smiles;
+        if (!smiles.isBlank()) {
+            this.instances.put("Molvec", new JChemPaintCustom(smiles));
+        }
+
     }
 
     @Override
@@ -57,12 +54,13 @@ public final class SniperMolecule extends SnippingTool {
 
         new Thread(() -> {
 
-            //TODO check if smiles are blank and create ui elements accordingly
             try {
-                new JChemPaintCustom(getImagoSmiles());
-                new JChemPaintCustom(getMolvecSmiles());
-            } catch (CDKException cdkException) {
-                cdkException.printStackTrace();
+            //TODO these JChem instances should not have a smile insertion bar
+                recImago();
+                recMolvec();
+                new ChemPaintTabView(this.instances);
+            } catch (Exception ex) {
+                ex.printStackTrace();
             }
 
         }).start();

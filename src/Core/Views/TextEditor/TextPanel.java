@@ -2,8 +2,6 @@ package Core.Views.TextEditor;
 
 
 import javax.swing.*;
-import javax.swing.text.*;
-import java.awt.*;
 import java.util.LinkedList;
 
 //TODO this could be of no use, use "JPanel" in "TextEditor", migrate "getLastFocusedArticle" in "TextEditorController"

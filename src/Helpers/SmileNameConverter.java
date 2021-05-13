@@ -58,7 +58,7 @@ public final class SmileNameConverter {
         );
     }
 
-    public static String parse(String data) {
+    public static void parse(String data) {
 
         data = data.toUpperCase();
         data = data.trim();
@@ -75,8 +75,13 @@ public final class SmileNameConverter {
                 invalidSmilesException.printStackTrace();
             }
         }
-
-        return smiles;
     }
 
+    public static String getMolName() {
+        return name;
+    }
+
+    public static String getMolSmiles() {
+        return smiles;
+    }
 }
