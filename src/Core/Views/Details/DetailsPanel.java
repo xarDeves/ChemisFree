@@ -1,4 +1,4 @@
-package Core.Views.DetailsPanel;
+package Core.Views.Details;
 
 import Core.Molecule;
 

@@ -1,8 +1,7 @@
 package Core.Views;
 
 import Core.Molecule;
-import Core.Views.DetailsPanel.DetailsPanel;
-import org.openscience.cdk.exception.CDKException;
+import Core.Views.Details.DetailsPanel;
 import org.openscience.jchempaint.JChemPaintCustom;
 
 import javax.swing.*;
@@ -71,8 +70,8 @@ public class MoleculeSearch extends JFrame {
                 try {
                     makeMolecule();
                     new JChemPaintCustom(molecule.smiles).show(molecule.name);
-                } catch (CDKException cdkException) {
-                    cdkException.printStackTrace();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
                 }
 
             }).start();

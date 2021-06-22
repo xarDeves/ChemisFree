@@ -23,29 +23,22 @@ public class TextEditor extends JFrame {
 
         articleButtonPanel = new JPanel();
         final JPanel panelToolButtons = new JPanel();
-        final JPanel panelDown = new JPanel();
-        final JPanel panelUpper = new JPanel();
         final TextPanel textPanel = new TextPanel();
         final JScrollPane textPanelScroll = new JScrollPane(textPanel);
-        //textPanelScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        //textPanelScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        textPanelScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        textPanelScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
         panelToolButtons.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
         articleButtonPanel.setBorder(BorderFactory.createEmptyBorder(20, 9, 0, 32));
 
-        panelUpper.setBackground(bgColor);
         panelToolButtons.setBackground(bgColor);
-        panelDown.setBackground(bgColor);
         articleButtonPanel.setBackground(bgColor);
 
         panelToolButtons.setLayout(new BoxLayout(panelToolButtons, BoxLayout.Y_AXIS));
-        panelUpper.setLayout(new FlowLayout(FlowLayout.LEADING, 228, 20));
         articleButtonPanel.setLayout(new BoxLayout(articleButtonPanel, BoxLayout.Y_AXIS));
 
-        panelUpper.setPreferredSize(new Dimension(0, 20));
         articleButtonPanel.setPreferredSize(new Dimension(230, 300));
         panelToolButtons.setPreferredSize(new Dimension(100, 400));
-        panelDown.setPreferredSize(new Dimension(0, 20));
         textPanelScroll.setPreferredSize(new Dimension(500, 300));
 
         JButton textMineBtn = new JButton(new ImageIcon("assets/TextEditor/TextMine.png"));
@@ -66,17 +59,15 @@ public class TextEditor extends JFrame {
         panelToolButtons.add(saveBtn);
         panelToolButtons.add(openFileBtn);
 
-        this.add(panelUpper, BorderLayout.NORTH);
         this.add(articleButtonPanel, BorderLayout.WEST);
         this.add(panelToolButtons, BorderLayout.EAST);
-        this.add(panelDown, BorderLayout.SOUTH);
         this.add(textPanelScroll, BorderLayout.CENTER);
-
-        this.pack();
-        this.setVisible(true);
 
         this.textController = new TextEditorController(textPanel, this);
         this.textController.createArticle("Untitled", "");
+
+        this.pack();
+        this.setVisible(true);
     }
 
     public void insertArticleButton(JButton button) {

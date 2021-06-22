@@ -1,7 +1,7 @@
 package Core.Views.TextEditor;
 
 import Core.Molecule;
-import Core.Views.DetailsPanel.DetailsPanel;
+import Core.Views.Details.DetailsPanel;
 
 import javax.swing.*;
 import java.awt.*;

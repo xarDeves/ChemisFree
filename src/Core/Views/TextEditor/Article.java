@@ -51,6 +51,7 @@ public class Article extends JPanel {
             };
         }
     }
+
     public class WrapEditorKit extends StyledEditorKit {
 
         protected ViewFactory _factory = new WrapColumnFactory();
@@ -60,6 +61,7 @@ public class Article extends JPanel {
             return _factory;
         }
     }
+
     public class WrapColumnFactory implements ViewFactory {
 
         @Override
@@ -103,7 +105,7 @@ public class Article extends JPanel {
         this.titleTextPane = new JTextPane();
         this.detailsTextPane = new JTextPane();
 
-        //FIXME for scroll testing purposes
+        //for scroll testing purposes
         this.titleTextPane.setEditorKit(new WrapEditorKit());
         this.detailsTextPane.setEditorKit(new WrapEditorKit());
 
@@ -144,6 +146,7 @@ public class Article extends JPanel {
         component.setBackground(Color.DARK_GRAY);
         component.setForeground(Color.WHITE);
     }
+
     private void stylizeInternals(JComponent component) {
 
         component.setOpaque(true);
@@ -167,6 +170,7 @@ public class Article extends JPanel {
             insertNormalText(rawTags);
 
     }
+
     private void insertInteractiveText(LinkedList<String> molTags, LinkedList<String> rawTags) throws BadLocationException {
         int tagCounter = 0;
 
@@ -183,11 +187,11 @@ public class Article extends JPanel {
             }
         }
     }
+
     private void insertNormalText(LinkedList<String> rawTags) throws BadLocationException {
         for (String rawTag : rawTags) {
             this.detailsStyledDoc.insertString(this.detailsStyledDoc.getLength(), rawTag + " ", detailsAttrs);
             this.detailsTextPane.setCaretPosition(this.detailsStyledDoc.getLength());
-
         }
     }
 
@@ -202,10 +206,12 @@ public class Article extends JPanel {
 
         return text;
     }
+
     public String getArticleText() {
 
         return reconstructText();
     }
+
     public JTextPane getDetailsPane() {
         return this.detailsTextPane;
     }
@@ -217,6 +223,7 @@ public class Article extends JPanel {
             e.printStackTrace();
         }
     }
+
     public void setArticleButton(JButton articleButton) {
 
         this.articleButton = articleButton;
@@ -269,6 +276,7 @@ public class Article extends JPanel {
 
         }
     }
+
     private class titleChangeListener implements KeyListener {
 
         @Override

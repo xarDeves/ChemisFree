@@ -3,7 +3,6 @@ package Core.Views;
 import Core.MasterController;
 import Core.Views.TextEditor.TextEditor;
 import Sniper.SniperMolecule;
-import org.openscience.cdk.exception.CDKException;
 import org.openscience.jchempaint.JChemPaintCustom;
 
 import javax.swing.*;
@@ -116,8 +115,8 @@ public class MainGui extends MyFrame {
 
             try {
                 new JChemPaintCustom();
-            } catch (CDKException cdkException) {
-                cdkException.printStackTrace();
+            } catch (Exception ex) {
+                ex.printStackTrace();
             }
 
         }
