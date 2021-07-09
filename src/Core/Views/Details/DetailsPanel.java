@@ -3,9 +3,24 @@ package Core.Views.Details;
 import Core.Molecule;
 
 import javax.swing.*;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
 import java.awt.*;
 
 public class DetailsPanel {
+
+    private final JTextArea textArea;
+    private final Molecule moleculeObject;
+
+    private void setDetailsPane() {
+        Document document = textArea.getDocument();
+        try {
+            document.insertString(document.getLength(), this.moleculeObject.aromaticAtomCount + "\n", null);
+            document.insertString(document.getLength(), this.moleculeObject.logP + "\n", null);
+        } catch (BadLocationException e) {
+            e.printStackTrace();
+        }
+    }
 
 
     public static void stylizeButtons(JButton button) {
@@ -41,6 +56,8 @@ public class DetailsPanel {
 
 
     public DetailsPanel(Molecule moleculeObject) {
+
+        this.moleculeObject = moleculeObject;
 
         ImageIcon image;
         image = new ImageIcon("assets/DetailsPanel/progressbar.png");
@@ -238,12 +255,14 @@ public class DetailsPanel {
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 50, 0, 10));
         panelBottom.add(buttonPanel, BorderLayout.WEST);
 
-        JTextArea textArea = new JTextArea();
+
+        textArea = new JTextArea();
         textArea.setPreferredSize(new Dimension(710, 500));
         textArea.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 10));
         panelBottom.add(textArea, BorderLayout.CENTER);
         textArea.setBackground(Color.decode(bg));
         textArea.setBorder(BorderFactory.createBevelBorder(0, Color.BLACK, Color.decode("#242424")));
+        this.setDetailsPane();
 
 //----------BUTTONS----------------------------------//
         JButton button = new JButton(new ImageIcon("assets/DetailsPanel/pubchem.png"));
