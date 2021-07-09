@@ -4,19 +4,23 @@ import org.openscience.cdk.CDKConstants;
 import org.openscience.cdk.depict.DepictionGenerator;
 import org.openscience.cdk.exception.CDKException;
 import org.openscience.cdk.exception.InvalidSmilesException;
+import org.openscience.cdk.interfaces.IAtom;
 import org.openscience.cdk.interfaces.IAtomContainer;
 import org.openscience.cdk.qsar.descriptors.molecular.*;
 import org.openscience.cdk.qsar.result.IDescriptorResult;
+import org.openscience.cdk.renderer.color.IAtomColorer;
 import org.openscience.cdk.silent.SilentChemObjectBuilder;
 import org.openscience.cdk.smiles.SmilesParser;
 import uk.ac.cam.ch.wwmm.opsin.NameToInchi;
 import uk.ac.cam.ch.wwmm.opsin.NameToStructure;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 //TODO if no info could be retrieved, implement not found mechanism
@@ -46,6 +50,7 @@ public final class Molecule {
         }
     }
 
+    public IAtomContainer atomContainer;
     public String name;
     public String smiles;
     public String weight;
@@ -63,6 +68,7 @@ public final class Molecule {
     public IDescriptorResult aLogP;
     public Double logS;
     public Double logSp;
+
     public BufferedImage molImage;
 
     public ArrayList<String> ruleOf5;
@@ -91,20 +97,29 @@ public final class Molecule {
 
         this.ghoseVeber = new ArrayList<>();
 
-        if (Double.parseDouble(weight) < 180.0 || Double.parseDouble(weight) > 480.0) {
-            System.out.print("Weight > 480 or < 180, ");
+        if (Double.parseDouble(weight) > 480.0) {
+            this.ghoseVeber.add("Weight > 480 ");
         }
-        if (Integer.parseInt(atomCount) < 20.0 || Integer.parseInt(atomCount) > 70.0) {
-            System.out.print("Number of atoms > 70 or < 20, ");
+        if (Double.parseDouble(weight) < 180.0) {
+            this.ghoseVeber.add("Weight < 180 ");
+        }
+        if (Integer.parseInt(atomCount) > 70.0) {
+            this.ghoseVeber.add("Number of atoms > 70 ");
+        }
+        if (Integer.parseInt(atomCount) < 20.0) {
+            this.ghoseVeber.add("Number of atoms < 20 ");
         }
         if (Integer.parseInt(rotatableBondsCount) > 10.0) {
-            System.out.print("Number of Rotatable bonds > 10, ");
+            this.ghoseVeber.add("Number of Rotatable bonds > 10 ");
         }
-        if (Double.parseDouble(logP) < -0.4 || Double.parseDouble(logP) > 5.6) {
-            System.out.print("LogP > 5.6 or < (-0.4), ");
+        if (Double.parseDouble(logP) > 5.6) {
+            System.out.print("LogP > 5.6 ");
+        }
+        if (Double.parseDouble(logP) < -0.4) {
+            this.ghoseVeber.add("LogP < -0.4 ");
         }
         if (Double.parseDouble(tpsa) > 140.0) {
-            System.out.println("TPSA > 140");
+            this.ghoseVeber.add("TPSA > 140 ");
         }
 
     }
@@ -154,11 +169,11 @@ public final class Molecule {
             System.out.println(s);
         }
 
-        /*determineGhoseVeber();
+        determineGhoseVeber();
         System.out.println("Ghose-Veber Violations : " + this.ghoseVeber.size());
-        for (String s : this.ruleOf5) {
+        for (String s : this.ghoseVeber) {
             System.out.println(s);
-        }*/
+        }
 
         determineleadLikeness();
         System.out.println("Leadlike violations : " + this.leadLikeness.size());
@@ -200,9 +215,9 @@ public final class Molecule {
         IAtomContainer mol = smilesParser.parseSmiles(this.smiles);
         mol.setProperty(CDKConstants.TITLE, this.weight);
 
-        DepictionGenerator depictionGenerator = new DepictionGenerator();
+        DepictionGenerator depictionGenerator = new DepictionGenerator().withBackgroundColor(new Color(0f, 0f, 0f, 0f));
         // size in px (raster) or mm (vector)
-        // annotations are red by default
+        // annotations are red by
         depictionGenerator.withAtomColors();
         depictionGenerator.withMolTitle();
 
@@ -280,7 +295,7 @@ public final class Molecule {
         this.stdinchikey = nti.parseToStdInchiKey(this.smiles);
         this.inchi = nti.parseToInchi(this.smiles);
 
-        IAtomContainer atomContainer = smilesParser.parseSmiles(this.smiles);
+        this.atomContainer = smilesParser.parseSmiles(this.smiles);
         //TODO truncate string directly
         this.weight = String.format("%.3f", Float.valueOf(weightDescriptor.calculate(atomContainer).getValue().toString()));
         this.xlogP = xlogPDescritpor.calculate(atomContainer).getValue().toString();
@@ -293,8 +308,11 @@ public final class Molecule {
         this.rotatableBondsCount = rotatableBondsCountDescriptor.calculate(atomContainer).getValue().toString();
         //this.ruleOfFive = ruleOfFiveDescriptor.calculate(atomContainer).getValue().toString();
         this.aromaticAtomCount = aromaticAtomCountDescriptor.calculate(atomContainer).getValue().toString();
-        this.logS = (-1.0377 * 12.19) - (0.0210 * Double.parseDouble(this.tpsa)) + 0.4488;
-        this.logSp = (-0.7897 * 12.19) - 1.3674;
+        DecimalFormat df = new DecimalFormat("#.##");
+        this.logS = Double.parseDouble(df.format((-1.0377 * Double.parseDouble(xlogP)) - (0.0210 * Double.parseDouble(this.tpsa)) + 0.4488));
+        this.logSp = (-0.7897 * Double.parseDouble(xlogP)) - 1.3674;
+
+
     }
 
 }

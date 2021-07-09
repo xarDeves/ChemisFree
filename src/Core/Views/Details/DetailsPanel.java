@@ -2,10 +2,14 @@ package Core.Views.Details;
 
 import Core.Molecule;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 public class DetailsPanel {
 
@@ -15,8 +19,23 @@ public class DetailsPanel {
     private void setDetailsPane() {
         Document document = textArea.getDocument();
         try {
-            document.insertString(document.getLength(), this.moleculeObject.aromaticAtomCount + "\n", null);
-            document.insertString(document.getLength(), this.moleculeObject.logP + "\n", null);
+            document.insertString(document.getLength(),"Aromatic Atom Count: " + this.moleculeObject.aromaticAtomCount + "\n", null);
+            document.insertString(document.getLength(), "LogP: " + this.moleculeObject.logP + "\n", null);
+            document.insertString(document.getLength(), "Molecular Weight: " + this.moleculeObject.weight + "\n", null);
+            document.insertString(document.getLength(), "Atom Count: " +  this.moleculeObject.atomCount + "\n", null);
+            document.insertString(document.getLength(), "Hydrogen Bond Acceptors: " +  this.moleculeObject.hBondAcceptorCount+ "\n", null);
+            document.insertString(document.getLength(), "Hydrogen Bond Donors: " +  this.moleculeObject.hBondDonorCount + "\n", null);
+            document.insertString(document.getLength(), "IUPAC Name: " + this.moleculeObject.name+ "\n", null);
+            document.insertString(document.getLength(), "Number of Rotatable Bonds: " + this.moleculeObject.rotatableBondsCount + "\n", null);
+            document.insertString(document.getLength(), "SMILES: " + this.moleculeObject.smiles + "\n", null);
+            document.insertString(document.getLength(), "TPSA: " +  this.moleculeObject.tpsa + "\n", null);
+            document.insertString(document.getLength(),"LogS: " +  this.moleculeObject.logS + "\n", null);
+            document.insertString(document.getLength(), "Rule of Five Violations: " + this.moleculeObject.ruleOf5.size() + "\n", null);
+            for(String rule: this.moleculeObject.ruleOf5){
+                document.insertString(document.getLength(), rule + "\n", null);
+
+            }
+
         } catch (BadLocationException e) {
             e.printStackTrace();
         }
@@ -54,15 +73,55 @@ public class DetailsPanel {
         label.setBorder(BorderFactory.createEmptyBorder(0, 65, 10, 5));
     }
 
+    public BufferedImage foo(String s, BufferedImage molImage) {
+
+        BufferedImage imgBG = null;
+        try {
+            imgBG = ImageIO.read(new File(s));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        /*for (int x = 0; x < molImage.getWidth(); x++) {
+            for (int y = 0; y < molImage.getHeight(); y++) {
+                Color rgba = new Color(molImage.getRGB(x, y));
+                if (rgba.getBlue() == 255 && rgba.getGreen() == 255 && rgba.getRed() == 255 ) {
+                    System.out.println(rgba);
+
+                    molImage.setRGB(x, y, 0);
+                }
+            }
+        }*/
+
+        // For simplicity we will presume the images are of identical size
+        final BufferedImage combinedImage = new BufferedImage(
+                imgBG.getWidth(),
+                imgBG.getHeight(),
+                BufferedImage.TYPE_INT_ARGB);
+
+        int x = imgBG.getWidth() / 2 - molImage.getWidth() / 2;
+        int y = imgBG.getHeight() / 2 - molImage.getHeight() / 2;
+
+        Graphics2D g = combinedImage.createGraphics();
+        g.drawImage(imgBG, 0, 0, null);
+        g.drawImage(molImage, x, y, null);
+        g.dispose();
+
+        return combinedImage;
+    }
 
     public DetailsPanel(Molecule moleculeObject) {
 
         this.moleculeObject = moleculeObject;
 
+
         ImageIcon image;
-        image = new ImageIcon("assets/DetailsPanel/progressbar.png");
         ImageIcon image2;
-        image2 = new ImageIcon("assets/DetailsPanel/glass.png");
+        image = new ImageIcon("assets/DetailsPanel/progressbar.png");
+        //image2 = new ImageIcon("assets/DetailsPanel/glass.png");
+
+        BufferedImage x = foo("assets/DetailsPanel/glass.png", moleculeObject.molImage);
+        image2 = new ImageIcon(x);
 
         JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
