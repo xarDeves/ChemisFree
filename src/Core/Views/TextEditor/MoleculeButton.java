@@ -2,10 +2,8 @@ package Core.Views.TextEditor;
 
 import Core.Molecule;
 import Core.Views.Details.DetailsPanel;
-import org.openscience.cdk.CDKConstants;
 import org.openscience.cdk.depict.DepictionGenerator;
 import org.openscience.cdk.exception.CDKException;
-import org.openscience.cdk.exception.InvalidSmilesException;
 import org.openscience.cdk.interfaces.IAtomContainer;
 import org.openscience.cdk.silent.SilentChemObjectBuilder;
 import org.openscience.cdk.smiles.SmilesParser;

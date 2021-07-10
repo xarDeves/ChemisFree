@@ -1,23 +1,19 @@
 package Core;
 
-import org.openscience.cdk.CDKConstants;
-import org.openscience.cdk.depict.DepictionGenerator;
 import org.openscience.cdk.exception.CDKException;
 import org.openscience.cdk.exception.InvalidSmilesException;
-import org.openscience.cdk.interfaces.IAtom;
 import org.openscience.cdk.interfaces.IAtomContainer;
 import org.openscience.cdk.qsar.descriptors.molecular.*;
 import org.openscience.cdk.qsar.result.IDescriptorResult;
-import org.openscience.cdk.renderer.color.IAtomColorer;
 import org.openscience.cdk.silent.SilentChemObjectBuilder;
 import org.openscience.cdk.smiles.SmilesParser;
 import uk.ac.cam.ch.wwmm.opsin.NameToInchi;
 import uk.ac.cam.ch.wwmm.opsin.NameToStructure;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.DecimalFormat;
