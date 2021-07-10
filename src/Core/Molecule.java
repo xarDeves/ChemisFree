@@ -68,7 +68,6 @@ public final class Molecule {
     public Double logS;
     public Double logSp;
 
-
     public ArrayList<String> ruleOf5;
     public ArrayList<String> ghoseVeber;
     public ArrayList<String> leadLikeness;
@@ -270,9 +269,10 @@ public final class Molecule {
 
         this.atomContainer = smilesParser.parseSmiles(this.smiles);
         //TODO truncate string directly
+        DecimalFormat df = new DecimalFormat("#.##");
         this.weight = String.format("%.3f", Float.valueOf(weightDescriptor.calculate(atomContainer).getValue().toString()));
         this.xlogP = xlogPDescritpor.calculate(atomContainer).getValue().toString();
-        this.logP = logPDescriptor.calculate(atomContainer).getValue().toString();
+        this.logP = String.format("%.3f", Float.valueOf((logPDescriptor.calculate(atomContainer).getValue().toString())));
         this.aLogP = aLogPDescriptor.calculate(atomContainer).getValue();
         this.tpsa = tpsaDescriptor.calculate(atomContainer).getValue().toString();
         this.atomCount = atomCountDescriptor.calculate(atomContainer).getValue().toString();
@@ -281,7 +281,6 @@ public final class Molecule {
         this.rotatableBondsCount = rotatableBondsCountDescriptor.calculate(atomContainer).getValue().toString();
         //this.ruleOfFive = ruleOfFiveDescriptor.calculate(atomContainer).getValue().toString();
         this.aromaticAtomCount = aromaticAtomCountDescriptor.calculate(atomContainer).getValue().toString();
-        DecimalFormat df = new DecimalFormat("#.##");
         this.logS = Double.parseDouble(df.format((-1.0377 * Double.parseDouble(xlogP)) - (0.0210 * Double.parseDouble(this.tpsa)) + 0.4488));
         this.logSp = (-0.7897 * Double.parseDouble(xlogP)) - 1.3674;
 

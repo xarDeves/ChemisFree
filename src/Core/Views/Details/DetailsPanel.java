@@ -202,7 +202,7 @@ public class DetailsPanel {
         iupac.setFont(new Font("Times Roman", Font.BOLD, 15));
         panel1.add(iupac, c);
 
-        JTextField tf1 = new JTextField("", 40);
+        JTextField tf1 = new JTextField(this.moleculeObject.name, 40);
         //tf1.setPreferredSize(new Dimension(50,5));
         fieldStyle(tf1);
         c.gridy = 0;
@@ -242,7 +242,7 @@ public class DetailsPanel {
 
         panel1.add(labelLogP, c);
 
-        JTextField tf4 = new JTextField("", 6);
+        JTextField tf4 = new JTextField(this.moleculeObject.logP, 6);
         fieldStyle(tf4);
         c.gridy = 0;
         c.gridx = 5;
@@ -263,7 +263,7 @@ public class DetailsPanel {
         c.anchor = GridBagConstraints.LAST_LINE_START;
         panel1.add(labelSmiles, c);
 
-        JTextField tf2 = new JTextField("");
+        JTextField tf2 = new JTextField(this.moleculeObject.smiles);
         c.gridy = 1;
         c.gridx = 1;
         c.gridheight = 1;
@@ -283,7 +283,7 @@ public class DetailsPanel {
         panel1.add(mw, c);
 
 
-        JTextField tf5 = new JTextField("");
+        JTextField tf5 = new JTextField(this.moleculeObject.weight);
         tf5.setText(moleculeObject.weight);
         c.gridy = 1;
         c.gridx = 3;
@@ -303,7 +303,7 @@ public class DetailsPanel {
         labelStyle(labelLogS);
         panel1.add(labelLogS, c);
 
-        JTextField tf6 = new JTextField("");
+        JTextField tf6 = new JTextField(this.moleculeObject.logS.toString());
         c.gridy = 1;
         c.gridx = 5;
         c.gridheight = 1;

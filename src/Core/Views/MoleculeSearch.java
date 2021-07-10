@@ -84,9 +84,10 @@ public class MoleculeSearch extends JFrame {
         @Override
         public void actionPerformed(ActionEvent e) {
 
-            makeMolecule();
-            new DetailsPanel(molecule);
-
+            new Thread(() -> {
+                makeMolecule();
+                new DetailsPanel(molecule);
+            }).start();
         }
     }
 

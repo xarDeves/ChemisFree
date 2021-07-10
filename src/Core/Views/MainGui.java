@@ -94,8 +94,7 @@ public class MainGui extends MyFrame {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-
-            new TextEditor();
+            new Thread(TextEditor::new).start();
         }
     }
 
@@ -104,7 +103,7 @@ public class MainGui extends MyFrame {
         @Override
         public void actionPerformed(ActionEvent e) {
 
-            new MoleculeSearch();
+            new Thread(MoleculeSearch::new).start();
         }
     }
 
