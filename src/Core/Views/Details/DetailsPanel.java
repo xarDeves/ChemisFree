@@ -1,6 +1,12 @@
 package Core.Views.Details;
 
 import Core.Molecule;
+import org.openscience.cdk.depict.DepictionGenerator;
+import org.openscience.cdk.exception.CDKException;
+import org.openscience.cdk.exception.InvalidSmilesException;
+import org.openscience.cdk.interfaces.IAtomContainer;
+import org.openscience.cdk.silent.SilentChemObjectBuilder;
+import org.openscience.cdk.smiles.SmilesParser;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -8,6 +14,8 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 
@@ -15,23 +23,24 @@ public class DetailsPanel {
 
     private final JTextArea textArea;
     private final Molecule moleculeObject;
+    private BufferedImage molImage;
 
     private void setDetailsPane() {
         Document document = textArea.getDocument();
         try {
-            document.insertString(document.getLength(),"Aromatic Atom Count: " + this.moleculeObject.aromaticAtomCount + "\n", null);
+            document.insertString(document.getLength(), "Aromatic Atom Count: " + this.moleculeObject.aromaticAtomCount + "\n", null);
             document.insertString(document.getLength(), "LogP: " + this.moleculeObject.logP + "\n", null);
             document.insertString(document.getLength(), "Molecular Weight: " + this.moleculeObject.weight + "\n", null);
-            document.insertString(document.getLength(), "Atom Count: " +  this.moleculeObject.atomCount + "\n", null);
-            document.insertString(document.getLength(), "Hydrogen Bond Acceptors: " +  this.moleculeObject.hBondAcceptorCount+ "\n", null);
-            document.insertString(document.getLength(), "Hydrogen Bond Donors: " +  this.moleculeObject.hBondDonorCount + "\n", null);
-            document.insertString(document.getLength(), "IUPAC Name: " + this.moleculeObject.name+ "\n", null);
+            document.insertString(document.getLength(), "Atom Count: " + this.moleculeObject.atomCount + "\n", null);
+            document.insertString(document.getLength(), "Hydrogen Bond Acceptors: " + this.moleculeObject.hBondAcceptorCount + "\n", null);
+            document.insertString(document.getLength(), "Hydrogen Bond Donors: " + this.moleculeObject.hBondDonorCount + "\n", null);
+            document.insertString(document.getLength(), "IUPAC Name: " + this.moleculeObject.name + "\n", null);
             document.insertString(document.getLength(), "Number of Rotatable Bonds: " + this.moleculeObject.rotatableBondsCount + "\n", null);
             document.insertString(document.getLength(), "SMILES: " + this.moleculeObject.smiles + "\n", null);
-            document.insertString(document.getLength(), "TPSA: " +  this.moleculeObject.tpsa + "\n", null);
-            document.insertString(document.getLength(),"LogS: " +  this.moleculeObject.logS + "\n", null);
+            document.insertString(document.getLength(), "TPSA: " + this.moleculeObject.tpsa + "\n", null);
+            document.insertString(document.getLength(), "LogS: " + this.moleculeObject.logS + "\n", null);
             document.insertString(document.getLength(), "Rule of Five Violations: " + this.moleculeObject.ruleOf5.size() + "\n", null);
-            for(String rule: this.moleculeObject.ruleOf5){
+            for (String rule : this.moleculeObject.ruleOf5) {
                 document.insertString(document.getLength(), rule + "\n", null);
 
             }
@@ -73,39 +82,49 @@ public class DetailsPanel {
         label.setBorder(BorderFactory.createEmptyBorder(0, 65, 10, 5));
     }
 
-    public BufferedImage foo(String s, BufferedImage molImage) {
 
-        BufferedImage imgBG = null;
+    public BufferedImage makeComposite(String root, String smiles) {
+
+        BufferedImage combinedImage = null;
+
         try {
-            imgBG = ImageIO.read(new File(s));
-        } catch (IOException e) {
+            final SmilesParser smilesParser = new SmilesParser(SilentChemObjectBuilder.getInstance());
+            IAtomContainer mol = smilesParser.parseSmiles(smiles);
+
+            BufferedImage imgBG = ImageIO.read(new File(root));
+
+            int bgWidth = imgBG.getWidth();
+            int bgHeight = imgBG.getHeight();
+
+            DepictionGenerator depictionGenerator = new DepictionGenerator()
+                    .withBackgroundColor(new Color(0f, 0f, 0f, 0f))
+                    .withAtomColors()
+                    .withSize(bgWidth, bgHeight);
+
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+            depictionGenerator.depict(mol).writeTo("png", out);
+            byte[] data = out.toByteArray();
+            ByteArrayInputStream input = new ByteArrayInputStream(data);
+            this.molImage = ImageIO.read(input);
+
+            combinedImage = new BufferedImage(
+                    bgWidth,
+                    bgHeight,
+                    BufferedImage.TYPE_INT_ARGB);
+
+            Graphics2D g = combinedImage.createGraphics();
+
+            int x = bgWidth / 2 - molImage.getWidth() / 2;
+            int y = bgHeight / 2 - molImage.getHeight() / 2;
+
+            g.drawImage(imgBG, 0, 0, null);
+            g.drawImage(molImage, x, y, null);
+            g.dispose();
+
+        } catch (IOException | CDKException e) {
             e.printStackTrace();
         }
-
-        /*for (int x = 0; x < molImage.getWidth(); x++) {
-            for (int y = 0; y < molImage.getHeight(); y++) {
-                Color rgba = new Color(molImage.getRGB(x, y));
-                if (rgba.getBlue() == 255 && rgba.getGreen() == 255 && rgba.getRed() == 255 ) {
-                    System.out.println(rgba);
-
-                    molImage.setRGB(x, y, 0);
-                }
-            }
-        }*/
-
-        // For simplicity we will presume the images are of identical size
-        final BufferedImage combinedImage = new BufferedImage(
-                imgBG.getWidth(),
-                imgBG.getHeight(),
-                BufferedImage.TYPE_INT_ARGB);
-
-        int x = imgBG.getWidth() / 2 - molImage.getWidth() / 2;
-        int y = imgBG.getHeight() / 2 - molImage.getHeight() / 2;
-
-        Graphics2D g = combinedImage.createGraphics();
-        g.drawImage(imgBG, 0, 0, null);
-        g.drawImage(molImage, x, y, null);
-        g.dispose();
 
         return combinedImage;
     }
@@ -114,17 +133,14 @@ public class DetailsPanel {
 
         this.moleculeObject = moleculeObject;
 
-
         ImageIcon image;
         ImageIcon image2;
         image = new ImageIcon("assets/DetailsPanel/progressbar.png");
-        //image2 = new ImageIcon("assets/DetailsPanel/glass.png");
 
-        BufferedImage x = foo("assets/DetailsPanel/glass.png", moleculeObject.molImage);
-        image2 = new ImageIcon(x);
+        BufferedImage compositeImage = makeComposite("assets/DetailsPanel/glass.png", this.moleculeObject.smiles);
+        image2 = new ImageIcon(compositeImage);
 
         JFrame frame = new JFrame();
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         JPanel mainPanel = new JPanel();
         mainPanel.setPreferredSize(new Dimension(1200, 1000));
         mainPanel.setBackground(Color.decode("#1A1A1A"));
@@ -133,7 +149,7 @@ public class DetailsPanel {
 //        mainPanel.add(Box.createRigidArea(new Dimension(1, 1)));
 
         frame.add(mainPanel);
-        String bg = new String("#1A1A1A");
+        String bg = "#1A1A1A";
 
 
 //------------MOLECULE & DRUG LIKENESS PANEL----------//

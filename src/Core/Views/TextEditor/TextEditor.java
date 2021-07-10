@@ -28,7 +28,6 @@ public class TextEditor extends JFrame {
         textPanelScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         textPanelScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
-        //FIXME change those
         panelToolButtons.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
         articleButtonPanel.setBorder(BorderFactory.createEmptyBorder(20, 9, 0, 32));
 

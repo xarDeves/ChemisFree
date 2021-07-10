@@ -35,7 +35,6 @@ public final class Molecule {
     private static final HBondAcceptorCountDescriptor hBondAcceptorDescriptor = new HBondAcceptorCountDescriptor();
     private static final HBondDonorCountDescriptor hBondDonorDescriptor = new HBondDonorCountDescriptor();
     private static final RotatableBondsCountDescriptor rotatableBondsCountDescriptor = new RotatableBondsCountDescriptor();
-    private static final RuleOfFiveDescriptor ruleOfFiveDescriptor = new RuleOfFiveDescriptor();
     private static final MannholdLogPDescriptor logPDescriptor = new MannholdLogPDescriptor();
     private static final TPSADescriptor tpsaDescriptor = new TPSADescriptor();
     private static final AromaticAtomsCountDescriptor aromaticAtomCountDescriptor = new AromaticAtomsCountDescriptor();
@@ -69,7 +68,6 @@ public final class Molecule {
     public Double logS;
     public Double logSp;
 
-    public BufferedImage molImage;
 
     public ArrayList<String> ruleOf5;
     public ArrayList<String> ghoseVeber;
@@ -199,37 +197,12 @@ public final class Molecule {
         if (this.smiles != null) {
 
             try {
-                this.makeImageFromSmiles();
                 this.generateInfoFromSmiles();
                 this.printInfo();
             } catch (CDKException e) {
                 e.printStackTrace();
             }
 
-        }
-    }
-
-    //TODO add molecular weight
-    private void makeImageFromSmiles() throws CDKException {
-
-        IAtomContainer mol = smilesParser.parseSmiles(this.smiles);
-        mol.setProperty(CDKConstants.TITLE, this.weight);
-
-        DepictionGenerator depictionGenerator = new DepictionGenerator().withBackgroundColor(new Color(0f, 0f, 0f, 0f));
-        // size in px (raster) or mm (vector)
-        // annotations are red by
-        depictionGenerator.withAtomColors();
-        depictionGenerator.withMolTitle();
-
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-
-        try {
-            depictionGenerator.depict(mol).writeTo("png", out);
-            byte[] data = out.toByteArray();
-            ByteArrayInputStream input = new ByteArrayInputStream(data);
-            this.molImage = ImageIO.read(input);
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
