@@ -27,17 +27,17 @@ public class DetailsPanel {
     private void setDetailsPane() {
         Document document = textArea.getDocument();
         try {
-            document.insertString(document.getLength(), "Aromatic Atom Count: " + this.moleculeObject.aromaticAtomCount + "\n", null);
-            document.insertString(document.getLength(), "LogP: " + this.moleculeObject.logP + "\n", null);
-            document.insertString(document.getLength(), "Molecular Weight: " + this.moleculeObject.weight + "\n", null);
+            document.insertString(document.getLength(), "Aromatic Atom Count: " + this.moleculeObject.aromaticAtomCount + "\n", null);/*
+            document.insertString(document.getLength(), "LogP: " + this.moleculeObject.logP + "\n", null);*/
+            /*document.insertString(document.getLength(), "Molecular Weight: " + this.moleculeObject.weight + "\n", null);*/
             document.insertString(document.getLength(), "Atom Count: " + this.moleculeObject.atomCount + "\n", null);
             document.insertString(document.getLength(), "Hydrogen Bond Acceptors: " + this.moleculeObject.hBondAcceptorCount + "\n", null);
             document.insertString(document.getLength(), "Hydrogen Bond Donors: " + this.moleculeObject.hBondDonorCount + "\n", null);
-            document.insertString(document.getLength(), "IUPAC Name: " + this.moleculeObject.name + "\n", null);
+     /*       document.insertString(document.getLength(), "IUPAC Name: " + this.moleculeObject.name + "\n", null);*/
             document.insertString(document.getLength(), "Number of Rotatable Bonds: " + this.moleculeObject.rotatableBondsCount + "\n", null);
-            document.insertString(document.getLength(), "SMILES: " + this.moleculeObject.smiles + "\n", null);
-            document.insertString(document.getLength(), "TPSA: " + this.moleculeObject.tpsa + "\n", null);
-            document.insertString(document.getLength(), "LogS: " + this.moleculeObject.logS + "\n", null);
+   /*         document.insertString(document.getLength(), "SMILES: " + this.moleculeObject.smiles + "\n", null);*/
+            document.insertString(document.getLength(), "TPSA: " + this.moleculeObject.tpsa + "\n", null);/*
+            document.insertString(document.getLength(), "LogS: " + this.moleculeObject.logS + "\n", null);*/
             document.insertString(document.getLength(), "Rule of Five Violations: " + this.moleculeObject.ruleOf5.size() + "\n", null);
             for (String rule : this.moleculeObject.ruleOf5) {
                 document.insertString(document.getLength(), rule + "\n", null);

@@ -21,19 +21,27 @@ public class MoleculeSearch extends JFrame {
 
         this.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
         this.setLocationRelativeTo(null);
+        this.getContentPane().setBackground(Color.decode("#1A1A1A"));
 
         textField = new JTextField();
         textField.addMouseListener(new TextFieldListener());
         textField.addKeyListener(new KeyPressListener());
         textField.setPreferredSize(new Dimension(250, 40));
         textField.setFont(new Font("Consolas", Font.ITALIC, 15));
-        textField.setForeground(Color.BLACK);
-        textField.setBackground(Color.WHITE);
+        textField.setForeground(Color.LIGHT_GRAY);
+        textField.setBackground(Color.decode("#1A1A1A"));
         textField.setSelectionColor(Color.GRAY);
+        textField.setBorder(BorderFactory.createBevelBorder(0, Color.BLACK, Color.decode("#242424")));
         textField.setText("Enter Name or SMILES");
 
         JButton editBtn = new JButton("Edit Structure");
+        editBtn.setForeground(Color.decode("#006aff"));
+        editBtn.setBackground(Color.decode("#1A1A1A"));
+        editBtn.setBorder(BorderFactory.createEmptyBorder());
         JButton detailBtn = new JButton("Details");
+        detailBtn.setForeground(Color.decode("#006aff"));
+        detailBtn.setBackground(Color.decode("#1A1A1A"));
+        detailBtn.setBorder(BorderFactory.createEmptyBorder());
 
         editBtn.addActionListener(new EditListener());
         detailBtn.addActionListener(new detailListener());
