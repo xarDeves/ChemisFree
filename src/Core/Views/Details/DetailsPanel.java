@@ -66,7 +66,8 @@ public class DetailsPanel {
     public static void fieldStyle(JTextField textField) {
         textField.setBackground(Color.decode("#1A1A1A"));
         textField.setForeground(Color.WHITE);
-        textField.setFont(new Font("TimesRoman", Font.BOLD, 17));
+        textField.setFont(new Font("TimesRoman", Font.BOLD, 13));
+        textField.setMaximumSize(textField.getSize());
 
         textField.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
         textField.setBorder(BorderFactory.createBevelBorder(0, Color.BLACK, Color.decode("#242424")));
@@ -216,7 +217,7 @@ public class DetailsPanel {
 
         JTextField tf1 = new JTextField(this.moleculeObject.name, 40);
         //tf1.setPreferredSize(new Dimension(50,5));
-        fieldStyle(tf1);
+
         c.gridy = 0;
         c.gridx = 1;
         c.gridheight = 1;
@@ -224,6 +225,7 @@ public class DetailsPanel {
 
         c.fill = GridBagConstraints.HORIZONTAL;
         panel1.add(tf1, c);
+        fieldStyle(tf1);
 
         JLabel formula = new JLabel("Formula: ");
         labelStyle(formula);
@@ -236,7 +238,7 @@ public class DetailsPanel {
 
 
         JTextField tf3 = new JTextField("", 10);
-        fieldStyle(tf3);
+
         c.gridy = 0;
         c.gridx = 3;
         c.gridheight = 1;
@@ -244,6 +246,7 @@ public class DetailsPanel {
 
         c.fill = GridBagConstraints.HORIZONTAL;
         panel1.add(tf3, c);
+        fieldStyle(tf3);
 
         JLabel labelLogP = new JLabel("LogP: ");
         labelStyle(labelLogP);
@@ -255,7 +258,7 @@ public class DetailsPanel {
         panel1.add(labelLogP, c);
 
         JTextField tf4 = new JTextField(this.moleculeObject.logP, 6);
-        fieldStyle(tf4);
+
         c.gridy = 0;
         c.gridx = 5;
         c.gridheight = 1;
@@ -263,6 +266,7 @@ public class DetailsPanel {
 
         c.fill = GridBagConstraints.HORIZONTAL;
         panel1.add(tf4, c);
+        fieldStyle(tf4);
 
         JLabel labelSmiles = new JLabel("SMILES: ");
         labelSmiles.setForeground(Color.decode("#006aff"));
@@ -280,10 +284,11 @@ public class DetailsPanel {
         c.gridx = 1;
         c.gridheight = 1;
         c.gridwidth = 1;
-        ;
+
         c.fill = GridBagConstraints.HORIZONTAL;
-        fieldStyle(tf2);
+
         panel1.add(tf2, c);
+        fieldStyle(tf2);
 
         JLabel mw = new JLabel("M.W: ");
         c.gridy = 1;
@@ -303,8 +308,9 @@ public class DetailsPanel {
         c.gridwidth = 1;
 
         c.fill = GridBagConstraints.HORIZONTAL;
-        fieldStyle(tf5);
+
         panel1.add(tf5, c);
+        fieldStyle(tf5);
 
         JLabel labelLogS = new JLabel("LogS: ");
         c.gridy = 1;
@@ -322,8 +328,9 @@ public class DetailsPanel {
         c.gridwidth = 2;
 
         c.fill = GridBagConstraints.HORIZONTAL;
-        fieldStyle(tf6);
+
         panel1.add(tf6, c);
+        fieldStyle(tf6);
 
 
         //---------BUTTON-PANEL & TEXTAREA-----------------------//
