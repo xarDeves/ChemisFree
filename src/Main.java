@@ -4,6 +4,9 @@ import Core.Views.MainGui;
 
 import javax.swing.*;
 
+//TODO fix JChemPaint erase bug
+//TODO fix TextEditor scroll/text wrap bug
+//TODO fix DetailsPanel image (if too big -> out of bounds)
 public class Main {
 
     public static void main(String[] args) {

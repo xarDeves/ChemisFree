@@ -53,19 +53,21 @@ public class MoleculeSearch extends JFrame {
         this.setVisible(true);
     }
 
+    //TODO throw popup on molecule creation failure (test without net)
     //prevents creating new molecule if previous is the same
     private void makeMolecule() {
 
         String textFieldData = textField.getText().toUpperCase(Locale.ROOT);
+        molecule = new Molecule(textFieldData);
 
-        if (this.molecule != null) {
+        /*if (this.molecule != null) {
             if (!(this.molecule.name.equals(textFieldData) || this.molecule.smiles.equals(textFieldData))) {
                 molecule = new Molecule(textFieldData);
                 System.out.println("made new");
             }
         } else {
             molecule = new Molecule(textFieldData);
-        }
+        }*/
     }
 
     private class EditListener implements ActionListener {

@@ -117,7 +117,7 @@ public final class Molecule {
 
     }
 
-    private void determineleadLikeness() {
+    private void determineLeadLikeness() {
 
         this.leadLikeness = new ArrayList<>();
 
@@ -168,7 +168,7 @@ public final class Molecule {
             System.out.println(s);
         }
 
-        determineleadLikeness();
+        determineLeadLikeness();
         System.out.println("Leadlike violations : " + this.leadLikeness.size());
         for (String s : this.leadLikeness) {
             System.out.println(s);
@@ -279,7 +279,6 @@ public final class Molecule {
         this.aromaticAtomCount = aromaticAtomCountDescriptor.calculate(atomContainer).getValue().toString();
         this.logS = Double.parseDouble(df.format((-1.0377 * Double.parseDouble(xlogP)) - (0.0210 * Double.parseDouble(this.tpsa)) + 0.4488));
         this.logSp = (-0.7897 * Double.parseDouble(xlogP)) - 1.3674;
-
 
     }
 

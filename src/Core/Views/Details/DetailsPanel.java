@@ -33,9 +33,9 @@ public class DetailsPanel {
             document.insertString(document.getLength(), "Atom Count: " + this.moleculeObject.atomCount + "\n", null);
             document.insertString(document.getLength(), "Hydrogen Bond Acceptors: " + this.moleculeObject.hBondAcceptorCount + "\n", null);
             document.insertString(document.getLength(), "Hydrogen Bond Donors: " + this.moleculeObject.hBondDonorCount + "\n", null);
-     /*       document.insertString(document.getLength(), "IUPAC Name: " + this.moleculeObject.name + "\n", null);*/
+            /*       document.insertString(document.getLength(), "IUPAC Name: " + this.moleculeObject.name + "\n", null);*/
             document.insertString(document.getLength(), "Number of Rotatable Bonds: " + this.moleculeObject.rotatableBondsCount + "\n", null);
-   /*         document.insertString(document.getLength(), "SMILES: " + this.moleculeObject.smiles + "\n", null);*/
+            /*         document.insertString(document.getLength(), "SMILES: " + this.moleculeObject.smiles + "\n", null);*/
             document.insertString(document.getLength(), "TPSA: " + this.moleculeObject.tpsa + "\n", null);/*
             document.insertString(document.getLength(), "LogS: " + this.moleculeObject.logS + "\n", null);*/
             document.insertString(document.getLength(), "Rule of Five Violations: " + this.moleculeObject.ruleOf5.size() + "\n", null);
@@ -97,8 +97,8 @@ public class DetailsPanel {
 
             DepictionGenerator depictionGenerator = new DepictionGenerator()
                     .withBackgroundColor(new Color(0f, 0f, 0f, 0f))
-                    .withAtomColors()
-                    .withSize(bgWidth, bgHeight);
+                    //.withSize(bgWidth, bgHeight)
+                    .withAtomColors();
 
             ByteArrayOutputStream out = new ByteArrayOutputStream();
 
@@ -107,6 +107,19 @@ public class DetailsPanel {
             ByteArrayInputStream input = new ByteArrayInputStream(data);
             this.molImage = ImageIO.read(input);
 
+            //change carbon color to white:
+            /*for (int x = 0; x < this.molImage.getWidth(); x++) {
+                for (int y = 0; y < this.molImage.getHeight(); y++) {
+                    int color = this.molImage.getRGB(x, y);
+                    int blue = color & 0xff;
+                    int green = (color & 0xff00) >> 8;
+                    int red = (color & 0xff0000) >> 16;
+                    int alpha = (color & 0xff000000) >> 24;
+                    //System.out.printf("%d %d %d %d\n", red,green,blue, alpha);
+                    if (red == 0 && green == 0 && blue == 0 && alpha !=0) this.molImage.setRGB(x, y, Color.WHITE.getRGB());
+                }
+            }*/
+
             combinedImage = new BufferedImage(
                     bgWidth,
                     bgHeight,
@@ -114,11 +127,11 @@ public class DetailsPanel {
 
             Graphics2D g = combinedImage.createGraphics();
 
-            int x = bgWidth / 2 - molImage.getWidth() / 2;
-            int y = bgHeight / 2 - molImage.getHeight() / 2;
+            int x = bgWidth / 2 - this.molImage.getWidth() / 2;
+            int y = bgHeight / 2 - this.molImage.getHeight() / 2;
 
             g.drawImage(imgBG, 0, 0, null);
-            g.drawImage(molImage, x, y, null);
+            g.drawImage(this.molImage, x, y, null);
             g.dispose();
 
         } catch (IOException | CDKException e) {
@@ -136,7 +149,7 @@ public class DetailsPanel {
         ImageIcon image2;
         image = new ImageIcon("assets/DetailsPanel/progressbar.png");
 
-        BufferedImage compositeImage = makeComposite("assets/DetailsPanel/glass.png", this.moleculeObject.smiles);
+        BufferedImage compositeImage = makeComposite("assets/DetailsPanel/glass2.png", this.moleculeObject.smiles);
         image2 = new ImageIcon(compositeImage);
 
         JFrame frame = new JFrame();
