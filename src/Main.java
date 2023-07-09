@@ -4,6 +4,7 @@ import Core.Views.MainGui;
 
 import javax.swing.*;
 
+//check out pyMol
 //TODO fix JChemPaint erase bug
 //TODO fix TextEditor scroll/text wrap bug
 //TODO fix DetailsPanel image (if too big -> out of bounds)
@@ -23,6 +24,7 @@ import javax.swing.*;
 //TODO fix main bar's moving problem and add a "minimize" and "close" button to every panel
 //TODO if possible find a way to calculate other useful descriptors like solubility, pKa, isoelectric point etc
 //TODO stop having alzheimer's and remember what else there is to do
+
 public class Main {
 
     public static void main(String[] args) {

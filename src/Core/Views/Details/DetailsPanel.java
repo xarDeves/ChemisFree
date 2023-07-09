@@ -41,7 +41,6 @@ public class DetailsPanel {
             document.insertString(document.getLength(), "Rule of Five Violations: " + this.moleculeObject.ruleOf5.size() + "\n", null);
             for (String rule : this.moleculeObject.ruleOf5) {
                 document.insertString(document.getLength(), rule + "\n", null);
-
             }
 
         } catch (BadLocationException e) {
@@ -59,8 +58,6 @@ public class DetailsPanel {
         button.setContentAreaFilled(false);
         button.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
         button.setBorderPainted(false);
-
-
     }
 
     public static void fieldStyle(JTextField textField) {
@@ -71,8 +68,6 @@ public class DetailsPanel {
 
         textField.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
         textField.setBorder(BorderFactory.createBevelBorder(0, Color.BLACK, Color.decode("#242424")));
-
-
     }
 
     public static void labelStyle(JLabel label) {
