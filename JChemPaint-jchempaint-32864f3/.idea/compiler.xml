@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="jchempaint-inchi-jni" />
+        <module name="jchempaint-app-jar" />
+        <module name="jchempaint-app-windows" />
+        <module name="jchempaint-inchi" />
+        <module name="jchempaint-render" />
+        <module name="jchempaint-core" />
+        <module name="jchempaint-inchi-nestedvm" />
+        <module name="jchempaint-app-osx" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="jchempaint" target="1.7" />
+      <module name="jchempaint-app-jar" target="1.7" />
+      <module name="jchempaint-app-osx" target="1.7" />
+      <module name="jchempaint-app-windows" target="1.7" />
+      <module name="jchempaint-core" target="1.7" />
+      <module name="jchempaint-inchi" target="1.7" />
+      <module name="jchempaint-inchi-jni" target="1.7" />
+      <module name="jchempaint-inchi-nestedvm" target="1.7" />
+      <module name="jchempaint-render" target="1.7" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

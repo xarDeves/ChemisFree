@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/jchempaint.iml" filepath="$PROJECT_DIR$/jchempaint.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app-jar/jchempaint-app-jar.iml" filepath="$PROJECT_DIR$/app-jar/jchempaint-app-jar.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app-osx/jchempaint-app-osx.iml" filepath="$PROJECT_DIR$/app-osx/jchempaint-app-osx.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app-windows/jchempaint-app-windows.iml" filepath="$PROJECT_DIR$/app-windows/jchempaint-app-windows.iml" />
+      <module fileurl="file://$PROJECT_DIR$/core/jchempaint-core.iml" filepath="$PROJECT_DIR$/core/jchempaint-core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/inchi/jchempaint-inchi.iml" filepath="$PROJECT_DIR$/inchi/jchempaint-inchi.iml" />
+      <module fileurl="file://$PROJECT_DIR$/inchi-jni/jchempaint-inchi-jni.iml" filepath="$PROJECT_DIR$/inchi-jni/jchempaint-inchi-jni.iml" />
+      <module fileurl="file://$PROJECT_DIR$/inchi-nestedvm/jchempaint-inchi-nestedvm.iml" filepath="$PROJECT_DIR$/inchi-nestedvm/jchempaint-inchi-nestedvm.iml" />
+      <module fileurl="file://$PROJECT_DIR$/render/jchempaint-render.iml" filepath="$PROJECT_DIR$/render/jchempaint-render.iml" />
+    </modules>
+  </component>
+</project>

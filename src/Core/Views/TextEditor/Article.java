@@ -136,7 +136,6 @@ public class Article extends JPanel {
 
         this.add(this.titlePanel);
         this.add(this.detailsTextPane);
-
     }
 
     private void stylizeTopLevel(JComponent component) {
@@ -164,35 +163,44 @@ public class Article extends JPanel {
 
         this.detailsTextPane.setText("");
 
-        if (molTags.size() != 0)
+        if (!molTags.isEmpty()) {
             insertInteractiveText(molTags, rawTags);
-        else
+        } else if (!rawTags.isEmpty()) {
             insertNormalText(rawTags);
-
+        } else {
+            insertNormalText(rawData);
+        }
     }
 
     private void insertInteractiveText(LinkedList<String> molTags, LinkedList<String> rawTags) throws BadLocationException {
         int tagCounter = 0;
 
         for (String rawTag : rawTags) {
-
             if (molTags.get(tagCounter).equals(rawTag)) {
                 this.detailsTextPane.insertComponent(new MoleculeButton(molTags.get(tagCounter)));
                 if (tagCounter < molTags.size() - 1) {
                     tagCounter++;
                 }
             } else {
-                this.detailsStyledDoc.insertString(this.detailsStyledDoc.getLength(), rawTag + " ", detailsAttrs);
-                this.detailsTextPane.setCaretPosition(this.detailsStyledDoc.getLength());
+                insertTag(rawTag);
             }
         }
     }
 
-    private void insertNormalText(LinkedList<String> rawTags) throws BadLocationException {
-        for (String rawTag : rawTags) {
-            this.detailsStyledDoc.insertString(this.detailsStyledDoc.getLength(), rawTag + " ", detailsAttrs);
-            this.detailsTextPane.setCaretPosition(this.detailsStyledDoc.getLength());
+    private void insertNormalText(Object text) throws BadLocationException {
+        if (text instanceof LinkedList<?>) {
+            for (String rawTag : (LinkedList<String>) text) {
+                insertTag(rawTag);
+            }
+        } else if (text instanceof String) {
+            insertTag((String) text);
         }
+
+        this.detailsTextPane.setCaretPosition(this.detailsStyledDoc.getLength());
+    }
+
+    private void insertTag(String tag) throws BadLocationException {
+        this.detailsStyledDoc.insertString(this.detailsStyledDoc.getLength(), tag + " ", detailsAttrs);
     }
 
     public String getTitleText() {

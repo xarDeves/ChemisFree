@@ -17,12 +17,17 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Locale;
 
 //TODO if no info could be retrieved, implement not found mechanism
 //TODO inherit from "SmileNameConverter"
 public final class Molecule {
 
+    //this is used to parse double strings that are formatted like x,x instead of x.x
+    NumberFormat format = NumberFormat.getInstance(Locale.FRANCE);
     private static final SmilesParser smilesParser = new SmilesParser(SilentChemObjectBuilder.getInstance());
     private static final NameToStructure nts = NameToStructure.getInstance();
     private static final WeightDescriptor weightDescriptor = new WeightDescriptor();
@@ -68,11 +73,11 @@ public final class Molecule {
     public ArrayList<String> ghoseVeber;
     public ArrayList<String> leadLikeness;
 
-    private void determineRuleOfFive() {
+    private void determineRuleOfFive() throws ParseException {
 
         this.ruleOf5 = new ArrayList<>();
 
-        if (Double.parseDouble(weight) > 500) {
+        if (format.parse(weight).doubleValue() > 500) {
             this.ruleOf5.add("Weight > 500");
         }
         if (Integer.parseInt(hBondAcceptorCount) > 10) {
@@ -81,19 +86,19 @@ public final class Molecule {
         if (Integer.parseInt(hBondDonorCount) > 5) {
             this.ruleOf5.add("Donors > 5");
         }
-        if (Double.parseDouble(logP) > 5) {
+        if (format.parse(logP).doubleValue() > 5) {
             this.ruleOf5.add("LogP > 5");
         }
     }
 
-    private void determineGhoseVeber() {
+    private void determineGhoseVeber() throws ParseException {
 
         this.ghoseVeber = new ArrayList<>();
 
-        if (Double.parseDouble(weight) > 480.0) {
+        if (format.parse(weight).doubleValue() > 480.0) {
             this.ghoseVeber.add("Weight > 480 ");
         }
-        if (Double.parseDouble(weight) < 180.0) {
+        if (format.parse(weight).doubleValue() < 180.0) {
             this.ghoseVeber.add("Weight < 180 ");
         }
         if (Integer.parseInt(atomCount) > 70.0) {
@@ -105,23 +110,23 @@ public final class Molecule {
         if (Integer.parseInt(rotatableBondsCount) > 10.0) {
             this.ghoseVeber.add("Number of Rotatable bonds > 10 ");
         }
-        if (Double.parseDouble(logP) > 5.6) {
+        if (format.parse(logP).doubleValue() > 5.6) {
             System.out.print("LogP > 5.6 ");
         }
-        if (Double.parseDouble(logP) < -0.4) {
+        if (format.parse(logP).doubleValue() < -0.4) {
             this.ghoseVeber.add("LogP < -0.4 ");
         }
-        if (Double.parseDouble(tpsa) > 140.0) {
+        if (format.parse(tpsa).doubleValue() > 140.0) {
             this.ghoseVeber.add("TPSA > 140 ");
         }
 
     }
 
-    private void determineLeadLikeness() {
+    private void determineLeadLikeness() throws ParseException {
 
         this.leadLikeness = new ArrayList<>();
 
-        if (Double.parseDouble(weight) > 300) {
+        if (format.parse(weight).doubleValue() > 300) {
             this.leadLikeness.add("MW > 300");
         }
         if (Integer.parseInt(rotatableBondsCount) > 3) {
@@ -133,7 +138,7 @@ public final class Molecule {
         if (Integer.parseInt(hBondAcceptorCount) > 3) {
             this.leadLikeness.add("H-Bond Acceptors > 3");
         }
-        if (Double.parseDouble(logP) > 3) {
+        if (format.parse(logP).doubleValue() > 3) {
             this.leadLikeness.add("LogP > 3");
         }
     }
@@ -154,25 +159,21 @@ public final class Molecule {
         System.out.println("H-Bond Donors : " + hBondDonorCount);
         System.out.println("Number of Rotatable Bonds : " + rotatableBondsCount);
         System.out.println("No of Aromatic Atoms : " + aromaticAtomCount);
-        //System.out.println("Rule of Five Violations : " + ruleOfFive);
 
-        determineRuleOfFive();
         System.out.println("Rule of Five Violations : " + this.ruleOf5.size());
         for (String s : this.ruleOf5) {
             System.out.println(s);
         }
-
-        determineGhoseVeber();
         System.out.println("Ghose-Veber Violations : " + this.ghoseVeber.size());
         for (String s : this.ghoseVeber) {
             System.out.println(s);
         }
-
-        determineLeadLikeness();
         System.out.println("Leadlike violations : " + this.leadLikeness.size());
         for (String s : this.leadLikeness) {
             System.out.println(s);
         }
+
+        //System.out.println("Rule of Five Violations : " + ruleOfFive);
 
         /*System.out.println("stdinchi : " + stdinchi);
         System.out.println("stdinchikey : " + stdinchikey);
@@ -194,7 +195,7 @@ public final class Molecule {
             try {
                 this.generateInfoFromSmiles();
                 this.printInfo();
-            } catch (CDKException e) {
+            } catch (CDKException | ParseException e) {
                 e.printStackTrace();
             }
 
@@ -257,7 +258,7 @@ public final class Molecule {
         );
     }
 
-    private void generateInfoFromSmiles() throws CDKException {
+    private void generateInfoFromSmiles() throws CDKException, ParseException {
 
         this.stdinchi = nti.parseToStdInchi(this.smiles);
         this.stdinchikey = nti.parseToStdInchiKey(this.smiles);
@@ -277,8 +278,12 @@ public final class Molecule {
         this.rotatableBondsCount = rotatableBondsCountDescriptor.calculate(atomContainer).getValue().toString();
         //this.ruleOfFive = ruleOfFiveDescriptor.calculate(atomContainer).getValue().toString();
         this.aromaticAtomCount = aromaticAtomCountDescriptor.calculate(atomContainer).getValue().toString();
-        this.logS = Double.parseDouble(df.format((-1.0377 * Double.parseDouble(xlogP)) - (0.0210 * Double.parseDouble(this.tpsa)) + 0.4488));
-        this.logSp = (-0.7897 * Double.parseDouble(xlogP)) - 1.3674;
+        this.logS = 0.0;//format.parse(df.format((-1.0377 * format.parse(xlogP)) - (0.0210 * format.parse(this.tpsa)) + 0.4488));
+        this.logSp = (-0.7897 * format.parse(xlogP).doubleValue()) - 1.3674;
+
+        determineRuleOfFive();
+        determineGhoseVeber();
+        determineLeadLikeness();
 
     }
 

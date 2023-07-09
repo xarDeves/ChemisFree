@@ -11,20 +11,21 @@ public class TextEditor extends JFrame {
 
     private final TextEditorController textController;
     private final JPanel articleButtonPanel;
-
+    private final JPanel panelToolButtons;
+    private final TextPanel textPanel;
+    private final JScrollPane textPanelScroll;
     private static final Color bgColor = Color.decode("#1A1A1A");
     private static final Border articleBtnBorder = BorderFactory.createEmptyBorder(0, 23, 0, 22);
     private static final Dimension articleBtnDim = new Dimension(200, 50);
 
     public TextEditor() {
-
         this.setLocation(500, 200);
         this.setLayout(new BorderLayout());
 
         articleButtonPanel = new JPanel();
-        final JPanel panelToolButtons = new JPanel();
-        final TextPanel textPanel = new TextPanel();
-        final JScrollPane textPanelScroll = new JScrollPane(textPanel);
+        panelToolButtons = new JPanel();
+        textPanel = new TextPanel();
+        textPanelScroll = new JScrollPane(textPanel);
         textPanelScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         textPanelScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
@@ -33,6 +34,9 @@ public class TextEditor extends JFrame {
 
         panelToolButtons.setBackground(bgColor);
         articleButtonPanel.setBackground(bgColor);
+        textPanel.setBackground(bgColor);
+        textPanelScroll.getViewport().setBackground(bgColor);
+        this.setBackground(bgColor);
 
         panelToolButtons.setLayout(new BoxLayout(panelToolButtons, BoxLayout.Y_AXIS));
         articleButtonPanel.setLayout(new BoxLayout(articleButtonPanel, BoxLayout.Y_AXIS));
@@ -71,7 +75,6 @@ public class TextEditor extends JFrame {
     }
 
     public void insertArticleButton(JButton button) {
-
         button.addActionListener(new articleNoBtnListener());
         stylizeArticleBtn(button);
 
@@ -81,46 +84,36 @@ public class TextEditor extends JFrame {
     }
 
     private class ocrListener implements ActionListener {
-
         @Override
         public void actionPerformed(ActionEvent e) {
-
             textController.ocr();
         }
     }
 
     private class openFileListenerXml implements ActionListener {
-
         @Override
         public void actionPerformed(ActionEvent e) {
-
             textController.openXml();
         }
     }
 
     private class saveFileListerXml implements ActionListener {
-
         @Override
         public void actionPerformed(ActionEvent e) {
-
             textController.saveXml();
         }
     }
 
     private class textMineListener implements ActionListener {
-
         @Override
         public void actionPerformed(ActionEvent e) {
-
             textController.mine();
         }
     }
 
     private class articleNoBtnListener implements ActionListener {
-
         @Override
         public void actionPerformed(ActionEvent e) {
-
             textController.articleButtonHandler((JButton) e.getSource());
         }
     }
@@ -142,13 +135,12 @@ public class TextEditor extends JFrame {
     }
 
     private void stylizeArticleBtn(JButton button) {
-
         button.setBorder(articleBtnBorder);
         button.setMaximumSize(articleBtnDim);
         button.setOpaque(false);
         button.setFocusable(false);
         button.setContentAreaFilled(false);
         button.setBorderPainted(false);
-
     }
+
 }

@@ -8,35 +8,33 @@ import java.util.LinkedList;
 //TODO this could be of no use, use "JPanel" in "TextEditor", migrate "getLastFocusedArticle" in "TextEditorController"
 public class TextPanel extends JPanel implements Scrollable {
 
+    public TextPanel() {
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+    }
+
     @Override
     public Dimension getPreferredScrollableViewportSize() {
-        return new Dimension(600, 200);
+        return getPreferredSize();
     }
 
     @Override
     public int getScrollableUnitIncrement(Rectangle visibleRect, int orientation, int direction) {
-        return 128;
+        return 16; // Set the desired scrolling unit increment
     }
 
     @Override
     public int getScrollableBlockIncrement(Rectangle visibleRect, int orientation, int direction) {
-        return 128;
+        return visibleRect.height - 10; // Set the desired scrolling block increment
     }
 
     @Override
     public boolean getScrollableTracksViewportWidth() {
-        return true;
+        return true; // Adjust this based on your requirements
     }
 
     @Override
     public boolean getScrollableTracksViewportHeight() {
-        return true;
-    }
-
-
-    public TextPanel() {
-
-        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        return false; // Adjust this based on your requirements
     }
 
     public Article getLastFocusedArticle(LinkedList<Article> articles) {

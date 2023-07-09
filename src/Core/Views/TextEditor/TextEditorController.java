@@ -21,9 +21,9 @@ public class TextEditorController {
     private final LinkedList<JButton> articleButtons = new LinkedList<>();
     private final TextEditor textEditor;
     private final TextPanel textPanel;
+    private static final Color bgColor = Color.decode("#1A1A1A");
 
     public TextEditorController(TextPanel textPanel, TextEditor textEditor) {
-
         this.textPanel = textPanel;
         this.textEditor = textEditor;
     }

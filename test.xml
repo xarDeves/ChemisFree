@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<articles>
+    <article title="Molecule 1">
+        <data>water</data>
+    </article>
+    <article title="Molecule 2">
+        <data>sulfur</data>
+    </article>
+    <article title="Molecule 3">
+        <data>caffeine</data>
+    </article>
+</articles>
