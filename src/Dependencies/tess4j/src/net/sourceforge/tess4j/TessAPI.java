@@ -38,7 +38,7 @@ public interface TessAPI extends Library, ITessAPI {
     /**
      * An instance of the class library.
      */
-    public static final TessAPI INSTANCE = LoadLibs.getTessAPIInstance();
+    TessAPI INSTANCE = LoadLibs.getTessAPIInstance();
 
     /**
      * Gets the version identifier.

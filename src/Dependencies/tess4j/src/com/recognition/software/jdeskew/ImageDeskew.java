@@ -23,17 +23,17 @@ public class ImageDeskew {
     }
 
     // the source image
-    private BufferedImage cImage;
+    private final BufferedImage cImage;
     // the range of angles to search for lines
-    private double cAlphaStart = -20;
-    private double cAlphaStep = 0.2;
-    private int cSteps = 40 * 5;
+    private final double cAlphaStart = -20;
+    private final double cAlphaStep = 0.2;
+    private final int cSteps = 40 * 5;
     // pre-calculation of sin and cos
     private double[] cSinA;
     private double[] cCosA;
     // range of d
     private double cDMin;
-    private double cDStep = 1.0;
+    private final double cDStep = 1.0;
     private int cDCount;
     // count of points that fit in a line
     private int[] cHMatrix;
@@ -144,7 +144,7 @@ public class ImageDeskew {
             try {
                 this.cHMatrix[index] += 1;
             } catch (Exception ex) {
-                System.out.println(ex.toString());
+                System.out.println(ex);
             }
         }
     }

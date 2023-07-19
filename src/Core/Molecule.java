@@ -1,21 +1,14 @@
 package Core;
 
+import Helpers.SmileNameConverter;
 import org.openscience.cdk.exception.CDKException;
-import org.openscience.cdk.exception.InvalidSmilesException;
 import org.openscience.cdk.interfaces.IAtomContainer;
 import org.openscience.cdk.qsar.descriptors.molecular.*;
 import org.openscience.cdk.qsar.result.IDescriptorResult;
 import org.openscience.cdk.silent.SilentChemObjectBuilder;
 import org.openscience.cdk.smiles.SmilesParser;
 import uk.ac.cam.ch.wwmm.opsin.NameToInchi;
-import uk.ac.cam.ch.wwmm.opsin.NameToStructure;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLConnection;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -23,13 +16,10 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 //TODO if no info could be retrieved, implement not found mechanism
-//TODO inherit from "SmileNameConverter"
 public final class Molecule {
 
-    //this is used to parse double strings that are formatted like x,x instead of x.x
     NumberFormat format = NumberFormat.getInstance(Locale.FRANCE);
     private static final SmilesParser smilesParser = new SmilesParser(SilentChemObjectBuilder.getInstance());
-    private static final NameToStructure nts = NameToStructure.getInstance();
     private static final WeightDescriptor weightDescriptor = new WeightDescriptor();
     private static final XLogPDescriptor xlogPDescritpor = new XLogPDescriptor();
     private static final AtomCountDescriptor atomCountDescriptor = new AtomCountDescriptor();
@@ -50,7 +40,7 @@ public final class Molecule {
         }
     }
 
-    public IAtomContainer atomContainer;
+    private IAtomContainer atomContainer;
     public String name;
     public String smiles;
     public String weight;
@@ -73,8 +63,23 @@ public final class Molecule {
     public ArrayList<String> ghoseVeber;
     public ArrayList<String> leadLikeness;
 
-    private void determineRuleOfFive() throws ParseException {
+    public Molecule(String molNameOrSmile) {
+        SmileNameConverter converter = new SmileNameConverter(molNameOrSmile);
+        this.name = converter.getMolName();
+        this.smiles = converter.getMolSmiles();
 
+        if (this.smiles != null) {
+            try {
+                this.generateInfoFromSmiles();
+                this.printInfo();
+            } catch (CDKException | ParseException e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
+
+    private void determineRuleOfFive() throws ParseException {
         this.ruleOf5 = new ArrayList<>();
 
         if (format.parse(weight).doubleValue() > 500) {
@@ -92,7 +97,6 @@ public final class Molecule {
     }
 
     private void determineGhoseVeber() throws ParseException {
-
         this.ghoseVeber = new ArrayList<>();
 
         if (format.parse(weight).doubleValue() > 480.0) {
@@ -119,11 +123,9 @@ public final class Molecule {
         if (format.parse(tpsa).doubleValue() > 140.0) {
             this.ghoseVeber.add("TPSA > 140 ");
         }
-
     }
 
     private void determineLeadLikeness() throws ParseException {
-
         this.leadLikeness = new ArrayList<>();
 
         if (format.parse(weight).doubleValue() > 300) {
@@ -144,7 +146,6 @@ public final class Molecule {
     }
 
     private void printInfo() {
-
         System.out.println(" -----------------------" + name + " -----------------------");
         System.out.println("smiles : " + smiles);
         System.out.println("Total Polar Surface Area : " + tpsa);
@@ -183,83 +184,7 @@ public final class Molecule {
         System.out.println(" -----------------------" + name + " -----------------------");
     }
 
-    public Molecule(String molecule) {
-
-        //FIXME this must work
-        //this.name = "N\\A";
-        this.name = molecule;
-        parse(molecule);
-
-        if (this.smiles != null) {
-
-            try {
-                this.generateInfoFromSmiles();
-                this.printInfo();
-            } catch (CDKException | ParseException e) {
-                e.printStackTrace();
-            }
-
-        }
-    }
-
-    private void parse(String data) {
-
-        data = data.toUpperCase();
-        data = data.trim();
-        data = data.replaceAll("\n", "");
-
-        try {
-            parseNameFromSmiles(data);
-        } catch (InvalidSmilesException | IOException e) {
-            //invalid smiles
-            try {
-                parseSmilesFromName(data);
-            } catch (InvalidSmilesException | IOException invalidSmilesException) {
-                //invalid name
-                invalidSmilesException.printStackTrace();
-            }
-        }
-    }
-
-    private String getDataFromURL(URL url) throws IOException {
-
-        URLConnection con = url.openConnection();
-        InputStream is = con.getInputStream();
-        BufferedReader br = new BufferedReader(new InputStreamReader(is));
-        return br.readLine();
-    }
-
-    private void parseSmilesFromName(String nameIn) throws InvalidSmilesException, IOException {
-
-        smiles = nts.parseToSmiles(nameIn);
-
-        if (smiles == null) {
-
-            smiles = getDataFromURL(
-                    new URL(
-                            "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/"
-                                    + nameIn +
-                                    "/property/CanonicalSMILES/TXT"
-                    )
-            );
-        }
-    }
-
-    private void parseNameFromSmiles(String smilesIn) throws InvalidSmilesException, IOException {
-
-        smiles = smilesIn;
-
-        name = getDataFromURL(
-                new URL(
-                        "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/smiles/"
-                                + smiles +
-                                "/property/IUPACName/TXT"
-                )
-        );
-    }
-
     private void generateInfoFromSmiles() throws CDKException, ParseException {
-
         this.stdinchi = nti.parseToStdInchi(this.smiles);
         this.stdinchikey = nti.parseToStdInchiKey(this.smiles);
         this.inchi = nti.parseToInchi(this.smiles);
@@ -284,7 +209,5 @@ public final class Molecule {
         determineRuleOfFive();
         determineGhoseVeber();
         determineLeadLikeness();
-
     }
-
 }

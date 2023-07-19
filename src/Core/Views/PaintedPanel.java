@@ -8,7 +8,6 @@ public class PaintedPanel extends JPanel {
     Image image;
 
     public PaintedPanel(Image image) {
-
         super(true);
 
         this.image = image;
@@ -17,7 +16,6 @@ public class PaintedPanel extends JPanel {
 
     @Override
     protected void paintComponent(Graphics g) {
-
         super.paintComponent(g);
         Graphics2D g2D = (Graphics2D) g;
 

@@ -1,5 +1,6 @@
 package Core.Views;
 
+import Core.MasterThreadPool;
 import Core.Molecule;
 import Core.Views.Details.DetailsPanel;
 import org.openscience.jchempaint.JChemPaintCustom;
@@ -11,40 +12,27 @@ import java.util.Locale;
 
 public class MoleculeSearch extends JFrame {
 
-    private final JTextField textField;
-
+    private JTextField textField;
     private boolean textFieldCleared = false;
-
     private Molecule molecule = null;
 
     public MoleculeSearch() {
+        setupUI();
+    }
 
+    private void setupUI() {
         this.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
         this.setLocationRelativeTo(null);
         this.getContentPane().setBackground(Color.decode("#1A1A1A"));
 
         textField = new JTextField();
-        textField.addMouseListener(new TextFieldListener());
-        textField.addKeyListener(new KeyPressListener());
-        textField.setPreferredSize(new Dimension(250, 40));
-        textField.setFont(new Font("Consolas", Font.ITALIC, 15));
-        textField.setForeground(Color.LIGHT_GRAY);
-        textField.setBackground(Color.decode("#1A1A1A"));
-        textField.setSelectionColor(Color.GRAY);
-        textField.setBorder(BorderFactory.createBevelBorder(0, Color.BLACK, Color.decode("#242424")));
-        textField.setText("Enter Name or SMILES");
+        setupTextField();
 
-        JButton editBtn = new JButton("Edit Structure");
-        editBtn.setForeground(Color.decode("#006aff"));
-        editBtn.setBackground(Color.decode("#1A1A1A"));
-        editBtn.setBorder(BorderFactory.createEmptyBorder());
-        JButton detailBtn = new JButton("Details");
-        detailBtn.setForeground(Color.decode("#006aff"));
-        detailBtn.setBackground(Color.decode("#1A1A1A"));
-        detailBtn.setBorder(BorderFactory.createEmptyBorder());
+        JButton editBtn = createButton("Edit Structure", Color.decode("#006aff"));
+        JButton detailBtn = createButton("Details", Color.decode("#006aff"));
 
         editBtn.addActionListener(new EditListener());
-        detailBtn.addActionListener(new detailListener());
+        detailBtn.addActionListener(new DetailListener());
 
         this.add(textField);
         this.add(editBtn);
@@ -53,58 +41,58 @@ public class MoleculeSearch extends JFrame {
         this.setVisible(true);
     }
 
-    //TODO throw popup on molecule creation failure (test without net)
-    //prevents creating new molecule if previous is the same
-    private void makeMolecule() {
+    private void setupTextField() {
+        textField.setPreferredSize(new Dimension(250, 40));
+        textField.setFont(new Font("Consolas", Font.ITALIC, 15));
+        textField.setForeground(Color.LIGHT_GRAY);
+        textField.setBackground(Color.decode("#1A1A1A"));
+        textField.setSelectionColor(Color.GRAY);
+        textField.setBorder(BorderFactory.createBevelBorder(0, Color.BLACK, Color.decode("#242424")));
+        textField.setText("Enter Name or SMILES");
+        textField.addMouseListener(new TextFieldMouseListener());
+        textField.addKeyListener(new KeyPressListener());
+    }
 
+    private JButton createButton(String label, Color foregroundColor) {
+        JButton button = new JButton(label);
+        button.setForeground(foregroundColor);
+        button.setBackground(Color.decode("#1A1A1A"));
+        button.setBorder(BorderFactory.createEmptyBorder());
+        return button;
+    }
+
+    private void makeMolecule() {
         String textFieldData = textField.getText().toUpperCase(Locale.ROOT);
         molecule = new Molecule(textFieldData);
-
-        /*if (this.molecule != null) {
-            if (!(this.molecule.name.equals(textFieldData) || this.molecule.smiles.equals(textFieldData))) {
-                molecule = new Molecule(textFieldData);
-                System.out.println("made new");
-            }
-        } else {
-            molecule = new Molecule(textFieldData);
-        }*/
     }
 
     private class EditListener implements ActionListener {
-
         @Override
         public void actionPerformed(ActionEvent e) {
-
-            new Thread(() -> {
-
+            MasterThreadPool.getPool().submit(() -> {
                 try {
                     makeMolecule();
                     new JChemPaintCustom(molecule.smiles).show(molecule.name);
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
-
-            }).start();
-
+            });
         }
     }
 
-    private class detailListener implements ActionListener {
-
+    private class DetailListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-
-            new Thread(() -> {
+            MasterThreadPool.getPool().submit(() -> {
                 makeMolecule();
                 new DetailsPanel(molecule);
-            }).start();
+            });
         }
     }
 
     private class KeyPressListener implements KeyListener {
         @Override
         public void keyTyped(KeyEvent e) {
-
         }
 
         @Override
@@ -117,12 +105,10 @@ public class MoleculeSearch extends JFrame {
 
         @Override
         public void keyReleased(KeyEvent e) {
-
         }
     }
 
-    private class TextFieldListener extends MouseAdapter {
-
+    private class TextFieldMouseListener extends MouseAdapter {
         @Override
         public void mouseClicked(MouseEvent e) {
             if (!textFieldCleared) {
@@ -131,4 +117,5 @@ public class MoleculeSearch extends JFrame {
             }
         }
     }
+
 }

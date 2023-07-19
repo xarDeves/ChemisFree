@@ -1,5 +1,6 @@
 package Sniper;
 
+import Core.MasterThreadPool;
 import Core.Views.TextEditor.Article;
 import net.sourceforge.tess4j.Tesseract;
 import net.sourceforge.tess4j.TesseractException;
@@ -21,7 +22,7 @@ public final class SniperText extends SnippingTool {
     @Override
     protected void launchRecon(KeyEvent e) {
 
-        new Thread(() -> {
+        MasterThreadPool.getPool().submit(() -> {
 
             Tesseract tesseract = new Tesseract();
             tesseract.setDatapath("src/Dependencies/tess4j/tessdata");
@@ -48,8 +49,7 @@ public final class SniperText extends SnippingTool {
                 JOptionPane.showMessageDialog(null, "ERROR!");
                 tesseractException.printStackTrace();
             }
-
-        }).start();
+        });
 
         sniperFrame.setVisible(false);
 

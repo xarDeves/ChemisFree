@@ -628,7 +628,7 @@ public class ImageIOHelper {
             int dpiX;
             if (nodes.getLength() > 0) {
                 float dpcWidth = Float.parseFloat(nodes.item(0).getAttributes().item(0).getNodeValue());
-                dpiX = (int) Math.round(25.4f / dpcWidth);
+                dpiX = Math.round(25.4f / dpcWidth);
             } else {
                 dpiX = Toolkit.getDefaultToolkit().getScreenResolution();
             }
@@ -638,7 +638,7 @@ public class ImageIOHelper {
             int dpiY;
             if (nodes.getLength() > 0) {
                 float dpcHeight = Float.parseFloat(nodes.item(0).getAttributes().item(0).getNodeValue());
-                dpiY = (int) Math.round(25.4f / dpcHeight);
+                dpiY = Math.round(25.4f / dpcHeight);
             } else {
                 dpiY = Toolkit.getDefaultToolkit().getScreenResolution();
             }

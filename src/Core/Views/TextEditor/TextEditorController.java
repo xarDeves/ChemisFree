@@ -21,7 +21,6 @@ public class TextEditorController {
     private final LinkedList<JButton> articleButtons = new LinkedList<>();
     private final TextEditor textEditor;
     private final TextPanel textPanel;
-    private static final Color bgColor = Color.decode("#1A1A1A");
 
     public TextEditorController(TextPanel textPanel, TextEditor textEditor) {
         this.textPanel = textPanel;
@@ -41,132 +40,73 @@ public class TextEditorController {
     }
 
     public void openXml() {
-
         FileDialog dialog = new FileDialog(this.textEditor, "Open File");
         dialog.setFile("*.xml");
         dialog.setVisible(true);
         String path = dialog.getDirectory() + dialog.getFile();
 
         if (new File(path).exists()) {
-
             HashMap<String, String> articlesTemp = new HashMap<>();
             XmlIoManager.loadAndDisplay(path, articlesTemp);
 
             for (Map.Entry<String, String> entry : articlesTemp.entrySet()) {
-                this.createArticle(entry.getKey(), entry.getValue());
-
+                createArticle(entry.getKey(), entry.getValue());
             }
-
         }
-
-
-        //for normal text:
-        /*StringBuilder textData = new StringBuilder(" ");
-
-        FileDialog dialog = new FileDialog(frame, "Open File");
-        dialog.setVisible(true);
-        String path = dialog.getDirectory() + dialog.getFile();
-
-        try (BufferedReader br = new BufferedReader(new FileReader(path))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                textData.append(line);
-            }
-        } catch (IOException ex) {
-            JOptionPane.showMessageDialog(null, "Error!");
-        }*/
-
-        //textArea.setText(textData.toString());
     }
 
     public void saveXml() {
-
         FileDialog dialog = new FileDialog(textEditor, "Save File");
         dialog.setFile("*.xml");
         dialog.setVisible(true);
         String path = dialog.getDirectory() + dialog.getFile();
 
         if (new File(path).exists()) {
-            int response = JOptionPane.showConfirmDialog(null, //
-                    "Do you want to replace the existing file?", //
-                    "Confirm", JOptionPane.YES_NO_OPTION, //
+            int response = JOptionPane.showConfirmDialog(null,
+                    "Do you want to replace the existing file?",
+                    "Confirm", JOptionPane.YES_NO_OPTION,
                     JOptionPane.QUESTION_MESSAGE);
+
             if (response != JOptionPane.YES_OPTION) {
                 return;
             }
+
             XmlIoManager.saveXml(path, this.articles);
         }
-
-        //for normal text
-        /*FileDialog dialog = new FileDialog(frame, "Save File");
-        dialog.setVisible(true);
-        String path = dialog.getDirectory() + dialog.getFile();
-
-        try (PrintWriter out = new PrintWriter(path)) {
-            out.println(textArea.getText());
-        } catch (FileNotFoundException ex) {
-            ex.printStackTrace();
-        }*/
     }
 
     public void mine() {
-
         for (Article article : this.articles) {
-
             try {
                 article.mineText();
             } catch (BadLocationException | IOException | SAXException badLocationException) {
                 badLocationException.printStackTrace();
             }
-
         }
-
-    }
-
-    private JButton createArticleButton() {
-
-        JButton button = new JButton(articleImageBtn);
-        JLabel buttonLabel = new JLabel();
-        button.add(buttonLabel);
-
-        return button;
     }
 
     public void createArticle(String title, String details) {
-
         Article article = new Article(title, details, this);
         JButton articleButton = createArticleButton();
-
         this.textEditor.insertArticleButton(articleButton);
-
         article.setArticleButton(articleButton);
         this.textPanel.add(article);
 
-        //FIXME these might not be of need
-        this.textPanel.revalidate();
-        this.textEditor.revalidate();
-        this.textPanel.repaint();
-        this.textEditor.repaint();
-
         this.articles.add(article);
         this.articleButtons.add(articleButton);
-
     }
 
     public void articleButtonHandler(JButton source) {
-
-        if (source.equals(this.articleButtons.getLast()))
+        if (source.equals(this.articleButtons.getLast())) {
             this.createArticle("Untitled", "");
+        }
         //else
         //TODO jump to article(?)
     }
 
     public void destroyArticleHandler(JButton articleButton, JPanel articlePanel) {
-
         if (articleButtons.size() > 1) {
-
             this.articleButtons.remove(articleButton);
-
             textEditor.getArticleButtonPanel().remove(articleButton);
             textPanel.remove(articlePanel);
 
@@ -178,4 +118,10 @@ public class TextEditorController {
         }
     }
 
+    private JButton createArticleButton() {
+        JButton button = new JButton(articleImageBtn);
+        JLabel buttonLabel = new JLabel();
+        button.add(buttonLabel);
+        return button;
+    }
 }

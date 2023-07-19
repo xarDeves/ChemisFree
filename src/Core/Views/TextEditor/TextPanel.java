@@ -19,22 +19,22 @@ public class TextPanel extends JPanel implements Scrollable {
 
     @Override
     public int getScrollableUnitIncrement(Rectangle visibleRect, int orientation, int direction) {
-        return 16; // Set the desired scrolling unit increment
+        return 16;
     }
 
     @Override
     public int getScrollableBlockIncrement(Rectangle visibleRect, int orientation, int direction) {
-        return visibleRect.height - 10; // Set the desired scrolling block increment
+        return visibleRect.height - 10;
     }
 
     @Override
     public boolean getScrollableTracksViewportWidth() {
-        return true; // Adjust this based on your requirements
+        return true;
     }
 
     @Override
     public boolean getScrollableTracksViewportHeight() {
-        return false; // Adjust this based on your requirements
+        return false;
     }
 
     public Article getLastFocusedArticle(LinkedList<Article> articles) {

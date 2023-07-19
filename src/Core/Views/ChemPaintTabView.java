@@ -11,7 +11,6 @@ public class ChemPaintTabView extends JFrame {
     JTabbedPane tabbedPane = new JTabbedPane();
 
     public ChemPaintTabView(HashMap<String, JChemPaintCustom> instances) {
-
         for (Map.Entry<String, JChemPaintCustom> entry : instances.entrySet()) {
             tabbedPane.addTab(entry.getKey(), entry.getValue().getChemPaintPanel());
             //tabbedPane.setMnemonicAt(0, KeyEvent.VK_1);

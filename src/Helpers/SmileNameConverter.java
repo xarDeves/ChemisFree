@@ -10,31 +10,27 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 
-
 public final class SmileNameConverter {
 
-    private static final NameToStructure nts = NameToStructure.getInstance();
+    private final NameToStructure nts = NameToStructure.getInstance();
 
-    private static String smiles;
-    private static String name;
+    private String smiles;
+    private String name;
 
-    private SmileNameConverter() {
+    public SmileNameConverter(String molNameOrSmile) {
+        parse(molNameOrSmile);
     }
 
-    private static String getDataFromURL(URL url) throws IOException {
-
+    private String getDataFromURL(URL url) throws IOException {
         URLConnection con = url.openConnection();
         InputStream is = con.getInputStream();
         BufferedReader br = new BufferedReader(new InputStreamReader(is));
         return br.readLine();
     }
 
-    private static void parseSmilesFromName(String nameIn) throws InvalidSmilesException, IOException {
-
+    private void parseSmilesFromName(String nameIn) throws InvalidSmilesException, IOException {
         smiles = nts.parseToSmiles(nameIn);
-
         if (smiles == null) {
-
             smiles = getDataFromURL(
                     new URL(
                             "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/"
@@ -45,10 +41,8 @@ public final class SmileNameConverter {
         }
     }
 
-    private static void parseNameFromSmiles(String smilesIn) throws InvalidSmilesException, IOException {
-
+    private void parseNameFromSmiles(String smilesIn) throws InvalidSmilesException, IOException {
         smiles = smilesIn;
-
         name = getDataFromURL(
                 new URL(
                         "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/smiles/"
@@ -58,8 +52,7 @@ public final class SmileNameConverter {
         );
     }
 
-    public static void parse(String data) {
-
+    private void parse(String data) {
         data = data.toUpperCase();
         data = data.trim();
         data = data.replaceAll("\n", "");
@@ -67,21 +60,21 @@ public final class SmileNameConverter {
         try {
             parseNameFromSmiles(data);
         } catch (InvalidSmilesException | IOException e) {
-            //invalid smiles
+            // Invalid smiles, try parsing using name
             try {
                 parseSmilesFromName(data);
             } catch (InvalidSmilesException | IOException invalidSmilesException) {
-                //invalid name
+                // Invalid name
                 invalidSmilesException.printStackTrace();
             }
         }
     }
 
-    public static String getMolName() {
+    public String getMolName() {
         return name;
     }
 
-    public static String getMolSmiles() {
+    public String getMolSmiles() {
         return smiles;
     }
 }

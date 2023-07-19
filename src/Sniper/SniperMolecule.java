@@ -1,5 +1,6 @@
 package Sniper;
 
+import Core.MasterThreadPool;
 import Core.Views.ChemPaintTabView;
 import com.epam.indigo.Indigo;
 import com.ggasoftware.imago.Imago;
@@ -57,14 +58,12 @@ public final class SniperMolecule extends SnippingTool {
     @Override
     protected void launchRecon(KeyEvent e) {
 
-        new Thread(() -> {
-
+        MasterThreadPool.getPool().submit(() -> {
             //TODO these JChem instances should not have a smile insertion bar
             recImago();
             recMolvec();
             new ChemPaintTabView(this.instances);
-
-        }).start();
+        });
 
         sniperFrame.setVisible(false);
     }

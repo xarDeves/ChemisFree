@@ -1,16 +1,10 @@
 package Core.Views;
 
 import Core.MasterController;
-import Core.Views.TextEditor.TextEditor;
-import Sniper.SniperMolecule;
-import org.openscience.jchempaint.JChemPaintCustom;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-//TODO upon creation of objects with critical data for mobile communication, append them in "MasterController"
 public class MainGui extends MyFrame {
     private final Dimension buttonMaxSize = new Dimension(62, 67);
     private final MasterController masterController;
@@ -21,14 +15,11 @@ public class MainGui extends MyFrame {
     private final JButton textBtn;
     private final JButton drawBtn;
     private final JButton sourceBtn;
-
     private final JButton phoneBtn;
     private final JButton homeBtn;
 
     public MainGui(MasterController masterController) {
-
         this.masterController = masterController;
-
         Image image = new ImageIcon("assets/MainGui/MainBar.png").getImage();
 
         panel = new MotionPanel(this, image);
@@ -44,29 +35,37 @@ public class MainGui extends MyFrame {
         phoneBtn = new JButton(new ImageIcon("assets/Shared/PhoneButton.png"));
         homeBtn = new JButton(new ImageIcon("assets/MainGui/HomeButton.png"));
 
-        molBtn.addActionListener(new MolListener());
-        textBtn.addActionListener(new TextListener());
-        drawBtn.addActionListener(new DrawListener());
-        sourceBtn.addActionListener(new SourceListener());
+        initializeButtons();
+        setupMainPanel();
+        setupFrameProperties();
+    }
 
-        stylizeAndGLue(molBtn, panel);
-        stylizeAndGLue(textBtn, panel);
-        stylizeAndGLue(drawBtn, panel);
-        stylizeAndGLue(sourceBtn, panel);
-        stylizeAndGLue(phoneBtn, panel);
-        stylizeAndGLue(homeBtn, panel);
+    private void initializeButtons() {
+        molBtn.addActionListener(e -> masterController.createSniperMolecule());
+        textBtn.addActionListener(e -> masterController.createTextEditorThread());
+        drawBtn.addActionListener(e -> masterController.createJChemPaintCustom());
+        sourceBtn.addActionListener(e -> masterController.createMoleculeSearchThread());
+    }
 
+    private void setupMainPanel() {
+        stylizeAndGlue(molBtn, panel);
+        stylizeAndGlue(textBtn, panel);
+        stylizeAndGlue(drawBtn, panel);
+        stylizeAndGlue(sourceBtn, panel);
+        stylizeAndGlue(phoneBtn, panel);
+        stylizeAndGlue(homeBtn, panel);
+    }
+
+    private void setupFrameProperties() {
         this.setPreferredSize(new Dimension(500, 800));
         //this.setBackground(Color.black);
         this.pack();
         this.setLocationRelativeTo(null);
         this.setVisible(true);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
     }
 
-    private void stylizeAndGLue(JButton button, JPanel panel) {
-
+    private void stylizeAndGlue(JButton button, JPanel panel) {
         button.setMaximumSize(buttonMaxSize);
         button.setBorder(null);
         button.setOpaque(false);
@@ -75,50 +74,6 @@ public class MainGui extends MyFrame {
         button.setBorderPainted(false);
 
         panel.add(button);
-    }
-
-    private class MolListener implements ActionListener {
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-
-            try {
-                new SniperMolecule(Toolkit.getDefaultToolkit().getScreenSize());
-            } catch (AWTException awtException) {
-                awtException.printStackTrace();
-            }
-        }
-    }
-
-    private class TextListener implements ActionListener {
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            new Thread(TextEditor::new).start();
-        }
-    }
-
-    private class SourceListener implements ActionListener {
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-
-            new Thread(MoleculeSearch::new).start();
-        }
-    }
-
-    private class DrawListener implements ActionListener {
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-
-            try {
-                new JChemPaintCustom();
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-
-        }
     }
 
 }

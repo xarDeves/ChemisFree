@@ -38,7 +38,7 @@ public interface ITesseract {
     /**
      * Rendered formats supported by Tesseract.
      */
-    public enum RenderedFormat {
+    enum RenderedFormat {
 
         TEXT, HOCR, PDF, UNLV, BOX
     }

@@ -79,7 +79,6 @@ public class DetailsPanel {
 
 
     public BufferedImage makeComposite(String root, String smiles) {
-
         BufferedImage combinedImage = null;
 
         try {
@@ -138,7 +137,6 @@ public class DetailsPanel {
     }
 
     public DetailsPanel(Molecule moleculeObject) {
-
         this.moleculeObject = moleculeObject;
 
         ImageIcon image;
