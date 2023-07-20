@@ -74,7 +74,6 @@ public final class XmlTagFormatter {
     }
 
     private void extract(NodeList allTags) {
-
         this.molTags.clear();
         this.rawTags.clear();
         int childLen, count;

@@ -5,9 +5,13 @@ import Core.Molecule;
 import Core.Views.Details.DetailsPanel;
 import org.openscience.jchempaint.JChemPaintCustom;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.Locale;
 
 public class MoleculeSearch extends JFrame {
@@ -17,10 +21,6 @@ public class MoleculeSearch extends JFrame {
     private Molecule molecule = null;
 
     public MoleculeSearch() {
-        setupUI();
-    }
-
-    private void setupUI() {
         this.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
         this.setLocationRelativeTo(null);
         this.getContentPane().setBackground(Color.decode("#1A1A1A"));

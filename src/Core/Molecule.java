@@ -184,6 +184,21 @@ public final class Molecule {
         System.out.println(" -----------------------" + name + " -----------------------");
     }
 
+    public static double calculateLogS(double xlogP, double tpsa) {
+        // Define constants for the coefficients
+        final double COEFFICIENT_XLOGP = -1.0377;
+        final double COEFFICIENT_TPSA = -0.0210;
+        final double CONSTANT_TERM = 0.4488;
+
+        // Calculate the result using the coefficients and constants
+        double result = COEFFICIENT_XLOGP * xlogP + COEFFICIENT_TPSA * tpsa + CONSTANT_TERM;
+
+        // Round the result to the desired precision
+        double roundedResult = Math.round(result * 10000.0) / 10000.0;
+
+        return roundedResult;
+    }
+
     private void generateInfoFromSmiles() throws CDKException, ParseException {
         this.stdinchi = nti.parseToStdInchi(this.smiles);
         this.stdinchikey = nti.parseToStdInchiKey(this.smiles);
@@ -203,7 +218,7 @@ public final class Molecule {
         this.rotatableBondsCount = rotatableBondsCountDescriptor.calculate(atomContainer).getValue().toString();
         //this.ruleOfFive = ruleOfFiveDescriptor.calculate(atomContainer).getValue().toString();
         this.aromaticAtomCount = aromaticAtomCountDescriptor.calculate(atomContainer).getValue().toString();
-        this.logS = 0.0;//format.parse(df.format((-1.0377 * format.parse(xlogP)) - (0.0210 * format.parse(this.tpsa)) + 0.4488));
+        this.logS = calculateLogS(format.parse(xlogP).doubleValue(), format.parse(tpsa).doubleValue());
         this.logSp = (-0.7897 * format.parse(xlogP).doubleValue()) - 1.3674;
 
         determineRuleOfFive();

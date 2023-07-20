@@ -2,8 +2,12 @@ package Core.Views;
 
 import Core.MasterController;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 public class MainGui extends MyFrame {
     private final Dimension buttonMaxSize = new Dimension(62, 67);
